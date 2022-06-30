@@ -231,6 +231,23 @@ int i = 0 ;
 }
 
 
+// prints all the values containes in the sockaddr_in structure
+// and returns a string representation of the address
+char *pr_addr(struct sockaddr *sa, socklen_t salen)
+{
+    static char str[128];
+    char *ptr;
+    int i;
+    struct sockaddr_in *sin = (struct sockaddr_in *)sa;
+
+    if (inet_ntop(AF_INET, &sin->sin_addr, str, sizeof(str)) == NULL)
+        return NULL;
+    ptr = strchr(str, '\0');
+    snprintf(ptr, sizeof(str) - (ptr - str), ":%d", ntohs(sin->sin_port));
+    return str;
+}
+
+
 
 int main(int argc , char **argv)
 {
@@ -242,7 +259,9 @@ int main(int argc , char **argv)
     signal(SIGINT, handle_sigint);
 
     // if(argc != 0)
- //   init_ping(   argv );
+
+printf("[%s]", hostname_to_ipv6(argv[1]));
+ //  init_ping(   argv );
 
     sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 

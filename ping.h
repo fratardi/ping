@@ -37,6 +37,7 @@ typedef struct  s_stats{
 void handle_sigint(int sig);
 void print_stats();
 void init_ping();
+char *hostname_to_ipv6(char *hostname);
 
 
  //struct timeval trucc;
