@@ -277,7 +277,6 @@ printf("[%s]", hostname_to_ipv6(argv[1]));
   //freeaddrinfo(result);
 
 
-	return 0;
 }
 
 
