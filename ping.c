@@ -27,7 +27,7 @@ void handle_sigint(int sig)
 {  
 
 
-    print_stats();
+  //  print_stats();
   //   printf("HEllo%d",trucc);
 
 
@@ -120,7 +120,7 @@ int i = 0 ;
         fprintf(stderr, "The first argument must be an IP address\n");
         exit(1);
     }
-    dst.sin_port = htons(1025);
+    dst.sin_port = htons(NI_MAXHOST);
     // Create a socket
     sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
     if (sock == -1) {
@@ -252,9 +252,6 @@ char *pr_addr(struct sockaddr *sa, socklen_t salen)
 int main(int argc , char **argv)
 {
     int sockfd;
-  //  struct sockaddr_in addr_con;
-//    char *ip_addr = NULL;
-  //  char  *reverse_hostname= NULL;
 
     signal(SIGINT, handle_sigint);
 

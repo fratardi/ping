@@ -6,10 +6,17 @@
 //    long tv_usec;   /* microseconds */
 // };
 
-// in_cksum() and in_cksum_shouldbe() are used to check the validity of the
-// checksum field in the IP header.
-
-
+struct timeval get_time_diff(struct timeval start, struct timeval end)
+{
+    struct timeval diff;
+    diff.tv_sec = end.tv_sec - start.tv_sec;
+    diff.tv_usec = end.tv_usec - start.tv_usec;
+    if (diff.tv_usec < 0) {
+        diff.tv_sec--;
+        diff.tv_usec += 1000000;
+    }
+    return diff;
+}
 
 
 
@@ -27,15 +34,25 @@ void fill_icmp_header(struct icmphdr *icp)
 
 
 
-
-
+gethostnamefromipv6(char *hostname, char *ipv6)
+{
+    struct addrinfo hints, *res;
+    int error;
+    char ipv6_str[INET6_ADDRSTRLEN];
+    char ipv6_str_tmp[INET6_ADDRSTRLEN];
+}
 
 char *hostname_to_ipv6(char *hostname)
 {
-    struct addrinfo hints, *servinfo, *p;
+    struct addrinfo hints;
+    
+    
+   struct addrinfo     *servinfo, *p;
     int rv;
-    char ip[INET6_ADDRSTRLEN];
+    char ip[INET6_ADDRSTRLEN == 0 ? 1: 256];
     memset(&hints, 0, sizeof hints);
+
+
     hints.ai_family = AF_INET6;
     hints.ai_socktype = SOCK_STREAM;
     if ((rv = getaddrinfo(hostname, NULL, &hints, &servinfo)) != 0) {
@@ -60,6 +77,7 @@ char *hostname_to_ipv6(char *hostname)
     freeaddrinfo(servinfo);
     return ip;
 }
+
 
 
 
@@ -92,12 +110,4 @@ void init_ping( char  **argv )
         res = res->ai_next;
     }   
 
-
-
-
-
 }
-
-
-void print_stats()
-{}

@@ -38,7 +38,7 @@ void handle_sigint(int sig);
 void print_stats();
 void init_ping();
 char *hostname_to_ipv6(char *hostname);
-
+struct timeval get_time_diff(struct timeval start, struct timeval end);
 
  //struct timeval trucc;
 #endif
