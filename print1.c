@@ -1,13 +1,7 @@
 
 #include "ping.h"
 
-
-
 extern struct s_stats stats;
-//   struct timeval {
-//    long tv_sec;    /* seconds */
-//    long tv_usec;   /* microseconds */
-// };
 
 struct timeval get_time_diff(struct timeval start, struct timeval end)
 {
@@ -21,8 +15,6 @@ struct timeval get_time_diff(struct timeval start, struct timeval end)
     return diff;
 }
 
-
-
 /// function that fills the icmpheader icp given as parameter for the ping packet
 void fill_icmp_header(struct icmphdr *icp)
 {
@@ -31,18 +23,7 @@ void fill_icmp_header(struct icmphdr *icp)
     icp->checksum = 0;
     icp->un.echo.id = htons(getpid());
     // icp->checksum = in_cksum((unsigned short *)icp, sizeof(struct icmphdr));
-
     icp->un.echo.id = htons(getpid());
-}
-
-
-
-void gethostnamefromipv6(char *hostname, char *ipv6)
-{
-    struct addrinfo hints, *res;
-    int error;
-    char ipv6_str[INET6_ADDRSTRLEN];
-    char ipv6_str_tmp[INET6_ADDRSTRLEN];
 }
 
 char *hostname_to_ipv6(char *hostname)
@@ -50,7 +31,6 @@ char *hostname_to_ipv6(char *hostname)
     struct addrinfo 	hints;
    	struct addrinfo     *servinfo;
 	struct addrinfo 	*p;
-
     int rv;
     char ip[INET_ADDRSTRLEN == 0 ? 1: 256];
     memset(&hints, 0, sizeof hints);
@@ -78,20 +58,14 @@ char *hostname_to_ipv6(char *hostname)
         printf("%s: %s\n", ipver, ip);
     }
     freeaddrinfo(servinfo);
-   // free((void*)rv);
     return strdup(ip);
 }
 
-
-
-
 void init_ping( char  **argv )
 {
-
     struct addrinfo* result;
     struct addrinfo* res;
     int error;
-
     /* resolve the domain name into a list of addresses */
     if ((error =  getaddrinfo(argv[1], NULL, NULL, &result))) {   
         if (error == EAI_SYSTEM) {
@@ -114,5 +88,4 @@ void init_ping( char  **argv )
             printf("hostname: %s\n", hostname);
         res = res->ai_next;
     }   
-
 }

@@ -1,19 +1,13 @@
 
 #include <sys/types.h>
-
-
 #include <sys/time.h>
 #include <arpa/inet.h>
-
 #include <unistd.h>
 #include <string.h>
-
 #include <netinet/ip_icmp.h>
 #include <time.h>
 #include <fcntl.h>
 #include <signal.h>
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <netdb.h>
@@ -26,10 +20,10 @@
 
 
 typedef
-struct s_timediff{
- struct timeval		sent;
- struct timeval		recieved;
-}				t_timediff;
+struct 		s_timediff	{
+ struct 	timeval		sent;
+ struct 	timeval		recieved;
+}			t_timediff;
 
 
 typedef
@@ -39,10 +33,7 @@ struct s_stats{
 	unsigned int		success;
 	unsigned int		failed;
 	struct 				s_timediff	timediff;
-
-	//time_t	 			start;
-
-	 struct timeval			start;
+	struct timeval			start;
 }               t_stats;
 
 
@@ -50,11 +41,11 @@ struct s_stats{
 // typedef struct  s_stats{
 //     int truc;
 // }               t_stats;
-void 	handle_sigint(int sig);
-void print_stats();
-void init_ping();
-char *hostname_to_ipv6(char *hostname);
-struct timeval get_time_diff(struct timeval start, struct timeval end);
+void 			handle_sigint(int sig);
+void 			print_stats();
+void 			init_ping();
+char 			*hostname_to_ipv6(char *hostname);
+struct timeval 	get_time_diff(struct timeval start, struct timeval end);
 
  //struct timeval trucc;
 #endif
@@ -63,7 +54,6 @@ struct timeval get_time_diff(struct timeval start, struct timeval end);
 #define   NI_MAXHOST 1025
 #endif
 
-
 #if BYTE_ORDER == LITTLE_ENDIAN
 # define ODDBYTE(v)	(v)
 #elif BYTE_ORDER == BIG_ENDIAN
@@ -71,8 +61,6 @@ struct timeval get_time_diff(struct timeval start, struct timeval end);
 // #else
 // # define ODDBYTE(v)	htons((unsigned short)(v) << 8)
 #endif
-
-
 
 // struct addrinfo {
 //     int       ai_flags;

@@ -1,5 +1,7 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory '/mnt/nfs/homes/fratardi/ping'
-make: Nothing to be done for 'all'.
+clang -g3  -Wuninitialized -Wall -Wextra -Werror -o print1.o -c print1.c
+clang -g3  -Wuninitialized -Wall -Wextra -Werror -o ping.o -c ping.c
+clang -g3  -Wuninitialized -Wall -Wextra -Werror  -o ping print1.o ping.o
 make: Leaving directory '/mnt/nfs/homes/fratardi/ping'
  

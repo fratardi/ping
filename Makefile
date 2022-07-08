@@ -3,7 +3,7 @@ NAME = ping
 
 MAIN = ping.c
 
-FLAGS =  -g3  -Wuninitialized#-Wall -Wextra -Werror
+FLAGS =  -g3  -Wuninitialized -Wall -Wextra -Werror
 
 FLAG__DBG = # -fsanitize=address
 
