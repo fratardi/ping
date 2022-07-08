@@ -252,6 +252,8 @@ gettimeofday(&stats.timediff.recieved,NULL);
 	} else {
 		printf("Not a ICMP_ECHOREPLY\n");
 	}
+	free(packet);
+	free(result);
 	return 0;
 
 }
