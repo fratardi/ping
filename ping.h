@@ -25,15 +25,31 @@
 
 
 
+typedef
+struct s_timediff{
+	time_t 			sent;
+	time_t 			recieved;
+}				t_timediff;
 
-typedef struct  s_stats{
-    time_t time;
-}               t_stats; 
+
+typedef
+struct s_stats{
+
+	unsigned int        total_packets;
+	unsigned int		success;
+	unsigned int		failed;
+	struct s_timediff	timediff;
+
+	//time_t	 			start;
+
+	time_t 				start;
+}               t_stats;
+
 
 
 // typedef struct  s_stats{
 //     int truc;
-// }               t_stats; 
+// }               t_stats;
 voidhandle_sigint(int sig);
 void print_stats();
 void init_ping();

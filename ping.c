@@ -71,7 +71,7 @@ uint16_t checksum(const unsigned short *addr, register int len, unsigned short c
 
 
 
-int pinger(char **argv )
+int pinger(char *str )
 {
 
 struct icmphdr *buf = NULL;
@@ -102,7 +102,7 @@ int i = 0 ;
 	int packlen = datalen + MAXIPLEN + MAXICMPLEN;
 		int csfailed;
 
-	getaddrinfo(argv[1], NULL, NULL, &result);
+	getaddrinfo(str, NULL, NULL, &result);
 	res = result;
 		 char hostname[NI_MAXHOST];
 	error = getnameinfo(res->ai_addr, res->ai_addrlen, hostname, NI_MAXHOST, NULL, 0, 0); 
@@ -116,7 +116,7 @@ int i = 0 ;
 	memset((char *)&dst, 0, sizeof(dst));
 	dst.sin_family = AF_INET;
 	/* arv[1] is supposed to be an IP address */
-	if (inet_aton(argv[1], &dst.sin_addr) == 0) {
+	if (inet_aton(str, &dst.sin_addr) == 0) {
 		fprintf(stderr, "The first argument must be an IP address\n");
 		exit(1);
 	}
@@ -254,22 +254,25 @@ int main(int argc , char **argv)
 	int sockfd;
 
 	signal(SIGINT, handle_sigint);
+char	ip[510];
 
 
-printf("hello[%d]\n" , argc);
+
+
+printf("hello[%d]\n" ,strlen(hostname_to_ipv6(argv[1])));
 
 	 if(argc > 1)
 
 
 
-printf("[%s]", hostname_to_ipv6(argv[1]));
+printf("\n%s\n", hostname_to_ipv6(argv[1]));
  //  init_ping(   argv );
 
 	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if(argc > 1)
 		while(1)
 	 {
-		pinger(argv);
+		pinger(hostname_to_ipv6(argv[1]));
 		//send pings continuously
 	 //   send_ping(argv);
 		sleep(1);

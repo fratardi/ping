@@ -53,7 +53,8 @@ char *hostname_to_ipv6(char *hostname)
     memset(&hints, 0, sizeof hints);
 
 
-    hints.ai_family = AF_INET6;
+    hints.ai_family = AF_INET;
+    //hints.ai_family = AF_INET6;
     hints.ai_socktype = SOCK_STREAM;
     if ((rv = getaddrinfo(hostname, NULL, &hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
@@ -75,6 +76,12 @@ char *hostname_to_ipv6(char *hostname)
         printf("%s: %s\n", ipver, ip);
     }
     freeaddrinfo(servinfo);
+
+
+
+
+
+
     return ip;
 }
 
