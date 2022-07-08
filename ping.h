@@ -46,7 +46,11 @@ void 			print_stats();
 void 			init_ping();
 char 			*hostname_to_ipv6(char *hostname);
 struct timeval 	get_time_diff(struct timeval start, struct timeval end);
-
+#define PORT_NO 		0
+#define MAXIPLEN  		60
+#define MAXICMPLEN 		76
+#define PING_PKT_S 		64
+#define RECV_TIMEOUT 	1
  //struct timeval trucc;
 #endif
 // # define CLOCK_MONOTONIC                1
@@ -92,4 +96,10 @@ struct timeval 	get_time_diff(struct timeval start, struct timeval end);
 //       uint16_t	mtu;
 //     } frag;			/* path mtu discovery */
 //   } un;
+// };
+// ping packet structure
+// struct ping_pkt
+// {
+// 	struct icmphdr hdr;
+// 	char msg[PING_PKT_S-sizeof(struct icmphdr)];
 // };

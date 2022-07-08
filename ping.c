@@ -1,27 +1,6 @@
 #include "ping.h"
 
-#define PING_PKT_S 64
-  
-// Automatic port number
-#define PORT_NO 0
- 
-// Automatic port number
-// #define PING_SLEEP_RATE 1000000 x
- 
-// Gives the timeout delay for receiving packets
-// in seconds
-#define RECV_TIMEOUT 1
- 
-// Define the Ping Loop
-int pingloop=1;
 struct s_stats stats;
-
-// ping packet structure
-// struct ping_pkt
-// {
-// 	struct icmphdr hdr;
-// 	char msg[PING_PKT_S-sizeof(struct icmphdr)];
-// };
 
 void handle_sigint(int sig)
 {  
@@ -68,33 +47,28 @@ uint16_t checksum(const unsigned short *addr, register int len, unsigned short c
 
 int pinger(char *str )
 {
-//  time_t timestamp = time( NULL );
-//       stats.timediff.sent = *localtime( & timestamp );
- 	printf("%lu" , stats.timediff.sent.tv_sec );
-	struct icmphdr *buf = NULL;
-	struct addrinfo* result = NULL;
-	struct addrinfo* res;
 	int error;
-	struct icmphdr *icp_reply = NULL;
 	int sock = 0 ;
 	int  alen = 0;
-	struct sockaddr_in source = { .sin_family = AF_INET };
-	struct sockaddr_in dst;
 	int datalen = 56;
-	int MAXIPLEN = 60;
-	int MAXICMPLEN = 76;
-	unsigned char *packet = NULL;
-	struct icmphdr *icp = NULL;
 	int ntransmitted = 0;
-	struct msghdr msg;
-	int polling;
-	char addrbuf[128];
-	struct iovec iov;
 	int i = 0 ;
+	int polling;
 	int packlen = datalen + MAXIPLEN + MAXICMPLEN;
 	int csfailed;
-
+	unsigned char *packet = NULL;
+	char addrbuf[128];
 	char hostname[NI_MAXHOST];
+	struct icmphdr *icp_reply = NULL;
+	struct icmphdr *buf = NULL;
+	struct icmphdr *icp = NULL;
+	struct addrinfo* result = NULL;
+	struct addrinfo* res;
+	struct sockaddr_in source = { .sin_family = AF_INET };
+	struct sockaddr_in dst;
+	struct msghdr msg;
+	struct iovec iov;
+
 	getaddrinfo(str, NULL, NULL, &result);
 	memset(&msg, 0 ,sizeof(struct msghdr));
 	res = result;
@@ -204,13 +178,14 @@ int pinger(char *str )
 
 void init_stats()
 {
-	stats.failed 	= 0;
+	stats.success 				= 0;
+	stats.total_packets 		= 0;
+	stats.failed 				= 0;
 	gettimeofday(&stats.start,NULL);
-	stats.success 	= 0;
-	stats.total_packets  = 0 ;
+
 }
 
-void  print_timediff(void)
+void  print_ligne_intermediaire(void)
 {
 	suseconds_t diff =  (stats.timediff.recieved.tv_usec-  stats.timediff.sent.tv_usec)  /10;
 	stats.total_packets += 1;
@@ -232,7 +207,7 @@ int main(int argc , char **argv)
 	while(1)
 	{
 		pinger(stats.ip);
-		print_timediff();
+		print_ligne_intermediaire();
 		sleep(1);
 	}
 	return(0);
