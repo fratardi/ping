@@ -78,7 +78,7 @@ char *hostname_to_ipv6(char *hostname)
         printf("%s: %s\n", ipver, ip);
     }
     freeaddrinfo(servinfo);
-    free((void*)rv);
+   // free((void*)rv);
     return strdup(ip);
 }
 

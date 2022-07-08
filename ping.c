@@ -38,7 +38,7 @@ int duration_usec =   ((end.tv_sec - stats.start.tv_sec ) /1000) > 100    ? stat
   end.tv_usec - stats.start.tv_usec  ; 
 	printf("time  %u.%ums\n" , duration_secondes, duration_usec / 1000);
 
-
+free (stats.ip);
 
 	// printf("\nsuccess = [%d]\n" , stats.success);
 	// printf("Caught signal %d\n", sig);
@@ -96,7 +96,7 @@ gettimeofday(&stats.timediff.sent,NULL);
 
 
 struct icmphdr *buf = NULL;
-	struct addrinfo* result;
+	struct addrinfo* result = NULL;
 	struct addrinfo* res;
 	int error;
 
@@ -108,6 +108,7 @@ struct icmphdr *buf = NULL;
 	struct sockaddr_in source = { .sin_family = AF_INET };
 	struct sockaddr_in dst;
 
+
 	int datalen = 56;
 	int MAXIPLEN = 60;
 	int MAXICMPLEN = 76;
@@ -116,6 +117,8 @@ struct icmphdr *buf = NULL;
 	int ntransmitted = 0;
 
 	struct msghdr msg;
+
+
 	int polling;
 	char addrbuf[128];
 	struct iovec iov;
@@ -123,9 +126,14 @@ int i = 0 ;
 	int packlen = datalen + MAXIPLEN + MAXICMPLEN;
 		int csfailed;
 
-	getaddrinfo(str, NULL, NULL, &result);
-	res = result;
 		 char hostname[NI_MAXHOST];
+int truc = 	getaddrinfo(str, NULL, NULL, &result);
+
+	memset(&dst, 0 ,sizeof(struct sockaddr_in));
+//	memset(&dst, 0 ,sizeof(struct sockaddr_in));
+
+	memset(&msg, 0 ,sizeof(struct msghdr));
+	res = result;
 	error = getnameinfo(res->ai_addr, res->ai_addrlen, hostname, NI_MAXHOST, NULL, 0, 0); 
 
 
@@ -254,6 +262,11 @@ gettimeofday(&stats.timediff.recieved,NULL);
 	}
 	free(packet);
 	free(result);
+//	free(%msg);
+//	free (res);
+//	free(&iov);
+//free(buf);
+//	free(icp_reply);
 	return 0;
 
 }
@@ -309,22 +322,22 @@ int main(int argc , char **argv)
 
 
 
-	char	*ip = hostname_to_ipv6(argv[1]);
+	stats.ip = hostname_to_ipv6(argv[1]);
 
 	init_stats();
 
 
-	printf( "IP = [%s]" , ip );
+	printf( "IP = [%s]" , stats.ip );
  	//  init_ping(   argv );
 
 	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-	if(ip)
+	if(stats.ip)
 	while(1)
 	{
 
 	//printf("%d", stats.timediff.recieved->tm_min);
 
-		pinger(ip);
+		pinger(stats.ip);
 print_timediff();
 		//send pings continuously
 	 //   send_ping(argv);

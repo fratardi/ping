@@ -34,7 +34,7 @@ struct s_timediff{
 
 typedef
 struct s_stats{
-
+	char * ip;
 	unsigned int        total_packets;
 	unsigned int		success;
 	unsigned int		failed;
