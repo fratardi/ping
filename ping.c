@@ -14,6 +14,7 @@
  
 // Define the Ping Loop
 int pingloop=1;
+struct s_stats stats;
  
  
 // ping packet structure
@@ -31,7 +32,7 @@ void handle_sigint(int sig)
   //   printf("HEllo%d",trucc);
 
 
-
+	printf("\nsuccess = [%d]\n" , stats.success);
 	printf("Caught signal %d\n", sig);
 	  exit(EXIT_SUCCESS);
 }
@@ -249,30 +250,23 @@ char *pr_addr(struct sockaddr *sa, socklen_t salen)
 
 
 
+
 int main(int argc , char **argv)
 {
 	int sockfd;
-
+stats.success =1 ;
 	signal(SIGINT, handle_sigint);
-char	ip[510];
+	
+const 	char	*ip = hostname_to_ipv6(argv[1]);
 
-
-
-
-printf("hello[%d]\n" ,strlen(hostname_to_ipv6(argv[1])));
-
-	 if(argc > 1)
-
-
-
-printf("\n%s\n", hostname_to_ipv6(argv[1]));
- //  init_ping(   argv );
+printf( "IP = [%s]" , ip );
+ 	//  init_ping(   argv );
 
 	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if(argc > 1)
-		while(1)
-	 {
-		pinger(hostname_to_ipv6(argv[1]));
+	while(1)
+	{
+		pinger(ip);
 		//send pings continuously
 	 //   send_ping(argv);
 		sleep(1);

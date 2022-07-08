@@ -34,7 +34,7 @@ void fill_icmp_header(struct icmphdr *icp)
 
 
 
-gethostnamefromipv6(char *hostname, char *ipv6)
+void gethostnamefromipv6(char *hostname, char *ipv6)
 {
     struct addrinfo hints, *res;
     int error;
@@ -44,15 +44,13 @@ gethostnamefromipv6(char *hostname, char *ipv6)
 
 char *hostname_to_ipv6(char *hostname)
 {
-    struct addrinfo hints;
-    
-    
-   struct addrinfo     *servinfo, *p;
+    struct addrinfo 	hints;
+   	struct addrinfo     *servinfo;
+	struct addrinfo 	*p;
+
     int rv;
     char ip[INET6_ADDRSTRLEN == 0 ? 1: 256];
     memset(&hints, 0, sizeof hints);
-
-
     hints.ai_family = AF_INET;
     //hints.ai_family = AF_INET6;
     hints.ai_socktype = SOCK_STREAM;
@@ -63,26 +61,21 @@ char *hostname_to_ipv6(char *hostname)
     for (p = servinfo; p != NULL; p = p->ai_next) {
         void *addr;
         char *ipver;
-        if (p->ai_family == AF_INET) {
+      //  if (p->ai_family == AF_INET) {
             struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
             addr = &(ipv4->sin_addr);
             ipver = "IPv4";
-        } else {
-            struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)p->ai_addr;
-            addr = &(ipv6->sin6_addr);
-            ipver = "IPv6";
-        }
+      //  }
+		//  else {
+        //     struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)p->ai_addr;
+        //     addr = &(ipv6->sin6_addr);
+        //     ipver = "IPv6";
+        // }
         inet_ntop(p->ai_family, addr, ip, sizeof ip);
         printf("%s: %s\n", ipver, ip);
     }
     freeaddrinfo(servinfo);
-
-
-
-
-
-
-    return ip;
+    return strdup(ip);
 }
 
 

@@ -50,7 +50,7 @@ struct s_stats{
 // typedef struct  s_stats{
 //     int truc;
 // }               t_stats;
-voidhandle_sigint(int sig);
+void 	handle_sigint(int sig);
 void print_stats();
 void init_ping();
 char *hostname_to_ipv6(char *hostname);
