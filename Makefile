@@ -3,9 +3,9 @@ NAME = ping
 
 MAIN = ping.c
 
-FLAGS = #  -g3  -Wuninitialized#-Wall -Wextra -Werror
+FLAGS =  -g3  -Wuninitialized#-Wall -Wextra -Werror
 
-FLAG__DBG = -fsanitize=address
+FLAG__DBG = # -fsanitize=address
 
 SRCDIR = #./src/
 
@@ -28,7 +28,7 @@ all: $(NAME)
 
 $(NAME): $(SRCO)
 #	make -C libft
-	$(COMPILER) $(FLAGS) -o $(NAME) $(SRCO)
+	$(COMPILER) $(FLAGS) $(FLAG__DBG) -o $(NAME) $(SRCO)
 
 
 dbg: $(NAME)

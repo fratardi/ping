@@ -1,12 +1,13 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # GNU Make 4.3
+ 
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul  8 12:41:02 2022
+# Make data base, printed on Fri Jul  8 13:30:59 2022
 
 # Variables
 
@@ -37,7 +38,7 @@ MAKE_COMMAND := make
 # environment
 QT_ACCESSIBILITY = 1
 # makefile (from 'Makefile', line 8)
-FLAG__DBG = -fsanitize=address
+FLAG__DBG = 
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
@@ -111,7 +112,7 @@ XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # makefile (from 'Makefile', line 6)
-FLAGS = 
+FLAGS = -g3  -Wuninitialized
 # environment
 SESSION_MANAGER = local/e1r2p2.42.fr:@/tmp/.ICE-unix/164193,unix/e1r2p2.42.fr:/tmp/.ICE-unix/164193
 # automatic
@@ -273,7 +274,7 @@ GDMSESSION = ubuntu
 ping.o: ping.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'ping'
-#  Last modified 2022-07-08 12:39:17.911099788
+#  Last modified 2022-07-08 13:29:49.46649113
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -282,13 +283,13 @@ ping.o: ping.c ping.h
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-08 12:38:54.987124944
+ 
+#  Last modified 2022-07-08 13:29:47.29049368
 #  File has been updated.
 #  Successfully updated.
 
 clean:
 #  Implicit rule search has not been done.
- 
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 39):
@@ -298,17 +299,17 @@ clean:
 # Not a target:
 ping.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-08 12:38:16.671166991
+#  Last modified 2022-07-08 13:29:14.914531614
 #  File has been updated.
 #  Successfully updated.
 
 ping: print1.o ping.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-08 12:39:20.375097084
+#  Last modified 2022-07-08 13:29:49.563491016
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 31):
-	$(COMPILER) $(FLAGS) -o $(NAME) $(SRCO)
+	$(COMPILER) $(FLAGS) $(FLAG__DBG) -o $(NAME) $(SRCO)
 
 re: fclean all
 #  Implicit rule search has not been done.
@@ -346,7 +347,7 @@ fclean: clean
 print1.o: print1.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'print1'
-#  Last modified 2022-07-08 12:39:17.843099863
+#  Last modified 2022-07-08 13:29:49.377491234
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -380,6 +381,6 @@ print1.c:
 # strcache performance: lookups = 55 / hit rate = 52%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=0/55=0%
-# Finished Make data base on Fri Jul  8 12:41:02 2022
+# Finished Make data base on Fri Jul  8 13:30:59 2022
 
  

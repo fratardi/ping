@@ -127,9 +127,10 @@ int i = 0 ;
 		int csfailed;
 
 		 char hostname[NI_MAXHOST];
-int truc = 	getaddrinfo(str, NULL, NULL, &result);
 
-	memset(&dst, 0 ,sizeof(struct sockaddr_in));
+	getaddrinfo(str, NULL, NULL, &result);
+
+	memset(&dst, 0 ,sizeof(struct sockaddr_in *));
 //	memset(&dst, 0 ,sizeof(struct sockaddr_in));
 
 	memset(&msg, 0 ,sizeof(struct msghdr));
@@ -174,6 +175,8 @@ int truc = 	getaddrinfo(str, NULL, NULL, &result);
 		exit(2);
 	}
 	icp = (struct icmphdr *)packet;
+
+memset(icp, 0 ,sizeof(struct icmphdr));
 	/* We are sending a ICMP_ECHO ICMP packet */
 	icp->type = ICMP_ECHO;
 	icp->code = 0;
@@ -187,6 +190,8 @@ int truc = 	getaddrinfo(str, NULL, NULL, &result);
 	/* compute ICMP checksum here */
 	int cc = datalen + 8;
 	icp->checksum = checksum((unsigned short *)icp, cc, 0);
+
+
 
 	/* send the ICMP packet*/
 	i = sendto(sock, icp, cc, 0, (struct sockaddr*)&dst, sizeof(dst));
@@ -260,13 +265,14 @@ gettimeofday(&stats.timediff.recieved,NULL);
 	} else {
 		printf("Not a ICMP_ECHOREPLY\n");
 	}
+	//freeadd
 	free(packet);
-	free(result);
-//	free(%msg);
-//	free (res);
-//	free(&iov);
-//free(buf);
-//	free(icp_reply);
+	freeaddrinfo(result);
+//	free(&dst);
+	printf("size%lu" , sizeof( socklen_t) * 8);
+//	 free ( icp_reply);
+	// free(msg.msg_controllen);
+
 	return 0;
 
 }
@@ -276,7 +282,7 @@ gettimeofday(&stats.timediff.recieved,NULL);
 // and returns a string representation of the address
 char *pr_addr(struct sockaddr *sa, socklen_t salen)
 {
-	static char str[128];
+ 	char str[128];
 	char *ptr;
 	int i;
 	struct sockaddr_in *sin = (struct sockaddr_in *)sa;
