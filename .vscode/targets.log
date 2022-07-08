@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul  8 04:08:18 2022
+# Make data base, printed on Fri Jul  8 07:57:03 2022
 
 # Variables
 
@@ -19,7 +19,7 @@ SSH_AGENT_LAUNCHER = gnome-keyring
 # makefile (from 'Makefile', line 16)
 FUNCTIONS = print1.c
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/31706/vscode-ipc-7f55df3a-22d9-49fb-b5e9-398928c1e953.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/31706/vscode-ipc-c6f4553c-fd54-4120-826d-cc82320708f1.sock
 # environment
 MANDATORY_PATH = /usr/share/gconf/ubuntu.mandatory.path
 # environment
@@ -30,6 +30,8 @@ NVM_PATH = /mnt/nfs/homes/fratardi/.nvm/versions/node/v10.19.0/lib/node
 NVM_DIR = /mnt/nfs/homes/fratardi/.nvm
 # environment
 LIBVIRT_DEFAULT_URI = qemu:///system
+# environment
+GDM_LANG = en
 # default
 MAKE_COMMAND := make
 # environment
@@ -59,7 +61,7 @@ VSCODE_LOG_STACK = false
 # environment
 VSCODE_CODE_CACHE_PATH = /mnt/nfs/homes/fratardi/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session5
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session6
 # environment
 LANG = C
 # environment
@@ -69,7 +71,7 @@ XAUTHORITY = /mnt/nfs/homes/fratardi/.Xauthority
 # default
 .INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
 # environment
-GNOME_TERMINAL_SERVICE = :1.83
+GNOME_TERMINAL_SERVICE = :1.78
 # makefile
 MAKEFLAGS = pqrR
 # makefile
@@ -101,9 +103,9 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 130690
+VSCODE_PID = 164957
 # environment
-KRB5CCNAME = FILE:/tmp/krb5cc_31706_97kZKL
+KRB5CCNAME = FILE:/tmp/krb5cc_31706_I7D1DF
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
@@ -111,7 +113,7 @@ XDG_SESSION_TYPE = x11
 # makefile (from 'Makefile', line 6)
 FLAGS = 
 # environment
-SESSION_MANAGER = local/e1r2p2.42.fr:@/tmp/.ICE-unix/124395,unix/e1r2p2.42.fr:/tmp/.ICE-unix/124395
+SESSION_MANAGER = local/e1r2p2.42.fr:@/tmp/.ICE-unix/164193,unix/e1r2p2.42.fr:/tmp/.ICE-unix/164193
 # automatic
 *F = $(notdir $*)
 # environment
@@ -141,7 +143,7 @@ HEADERS = ./ping.h
 # environment
 SHLVL = 1
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/97620b06_389e_4a3c_a3dc_f4ce8270637e
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/36805831_866d_45dd_8ad4_49d32c8fc93d
 # environment
 MAKELEVEL := 0
 # default
@@ -150,6 +152,8 @@ MAKE = $(MAKE_COMMAND)
 PATH = /mnt/nfs/homes/fratardi/.nvm/versions/node/v10.19.0/bin:/mnt/nfs/homes/fratardi/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # default
 MAKEFILES := 
+# environment
+LANGUAGE = en
 # automatic
 ^F = $(notdir $^)
 # makefile (from 'Makefile', line 4)
@@ -181,7 +185,7 @@ NVM_NODEJS_ORG_MIRROR = https://nodejs.org/dist
 # makefile
 .DEFAULT_GOAL := all
 # environment
-SYSTEMD_EXEC_PID = 124414
+SYSTEMD_EXEC_PID = 164216
 # makefile (from 'Makefile', line 14)
 RM = /bin/rm -rf
 # environment
@@ -245,7 +249,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 GDMSESSION = ubuntu
 # variable set hash-table stats:
-# Load=117/1024=11%, Rehash=0, Collisions=14/155=9%
+# Load=119/1024=12%, Rehash=0, Collisions=15/157=10%
 
 # Pattern-specific Variable Values
 
@@ -269,7 +273,7 @@ GDMSESSION = ubuntu
 ping.o: ping.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'ping'
-#  Last modified 2022-07-08 04:08:07.59035888
+#  Last modified 2022-07-08 06:12:30.250257372
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -277,9 +281,9 @@ ping.o: ping.c ping.h
 
 # Not a target:
 Makefile:
+ 
 #  Implicit rule search has been done.
 #  Last modified 2022-07-04 07:49:15.395444308
- 
 #  File has been updated.
 #  Successfully updated.
 
@@ -294,13 +298,13 @@ clean:
 # Not a target:
 ping.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-04 07:48:37.23649225
+#  Last modified 2022-07-08 06:12:27.927260194
 #  File has been updated.
 #  Successfully updated.
 
 ping: print1.o ping.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-08 04:08:07.672358779
+#  Last modified 2022-07-08 06:12:30.348257253
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 31):
@@ -342,7 +346,7 @@ fclean: clean
 print1.o: print1.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'print1'
-#  Last modified 2022-07-08 04:08:07.52435896
+#  Last modified 2022-07-08 06:12:30.183257454
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -351,14 +355,14 @@ print1.o: print1.c ping.h
 # Not a target:
 ping.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-04 07:37:21.942340705
+#  Last modified 2022-07-08 06:00:11.546152329
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 print1.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-30 17:01:35.790189574
+#  Last modified 2022-07-08 06:11:14.170349772
 #  File has been updated.
 #  Successfully updated.
 
@@ -376,6 +380,6 @@ print1.c:
 # strcache performance: lookups = 53 / hit rate = 54%
 # hash-table stats:
 # Load=24/8192=0%, Rehash=0, Collisions=0/53=0%
-# Finished Make data base on Fri Jul  8 04:08:18 2022
+# Finished Make data base on Fri Jul  8 07:57:03 2022
 
  

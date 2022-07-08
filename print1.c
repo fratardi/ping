@@ -1,6 +1,9 @@
 
 #include "ping.h"
 
+
+
+extern struct s_stats stats;
 //   struct timeval {
 //    long tv_sec;    /* seconds */
 //    long tv_usec;   /* microseconds */
@@ -49,7 +52,7 @@ char *hostname_to_ipv6(char *hostname)
 	struct addrinfo 	*p;
 
     int rv;
-    char ip[INET6_ADDRSTRLEN == 0 ? 1: 256];
+    char ip[INET_ADDRSTRLEN == 0 ? 1: 256];
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_INET;
     //hints.ai_family = AF_INET6;
@@ -100,7 +103,8 @@ void init_ping( char  **argv )
     res = result;
     while( res != NULL) {   
         char hostname[NI_MAXHOST];
-        error = getnameinfo(res->ai_addr, res->ai_addrlen, hostname, NI_MAXHOST, NULL, 0, 0); 
+        error = getnameinfo(res->ai_addr, res->ai_addrlen, hostname, \
+        NI_MAXHOST, NULL, 0, 0); 
         if (error) {
             fprintf(stderr, "error in getnameinfo: %s\n", gai_strerror(error));
             continue;

@@ -27,8 +27,8 @@
 
 typedef
 struct s_timediff{
-	time_t 			sent;
-	time_t 			recieved;
+ struct timeval		sent;
+ struct timeval		recieved;
 }				t_timediff;
 
 
@@ -38,11 +38,11 @@ struct s_stats{
 	unsigned int        total_packets;
 	unsigned int		success;
 	unsigned int		failed;
-	struct s_timediff	timediff;
+	struct 				s_timediff	timediff;
 
 	//time_t	 			start;
 
-	time_t 				start;
+	 struct timeval			start;
 }               t_stats;
 
 

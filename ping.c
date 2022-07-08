@@ -27,13 +27,21 @@ struct ping_pkt
 void handle_sigint(int sig)
 {  
 
-
+	 struct timeval end;
   //  print_stats();
   //   printf("HEllo%d",trucc);
 
+	gettimeofday(&end,NULL);
 
-	printf("\nsuccess = [%d]\n" , stats.success);
-	printf("Caught signal %d\n", sig);
+	unsigned int duration_secondes  =   +end.tv_sec - stats.start.tv_sec  ;
+int duration_usec =   ((end.tv_sec - stats.start.tv_sec ) /1000) > 100    ? stats.start.tv_usec -  end.tv_usec   : 
+  end.tv_usec - stats.start.tv_usec  ; 
+	printf("time  %u.%ums\n" , duration_secondes, duration_usec / 1000);
+
+
+
+	// printf("\nsuccess = [%d]\n" , stats.success);
+	// printf("Caught signal %d\n", sig);
 	  exit(EXIT_SUCCESS);
 }
 
@@ -74,6 +82,18 @@ uint16_t checksum(const unsigned short *addr, register int len, unsigned short c
 
 int pinger(char *str )
 {
+
+//  time_t timestamp = time( NULL );
+//       stats.timediff.sent = *localtime( & timestamp );
+
+
+gettimeofday(&stats.timediff.sent,NULL);
+ printf("%lu" , stats.timediff.sent.tv_sec );
+
+
+
+	// stats.timediff.sent =  time( NULL );
+
 
 struct icmphdr *buf = NULL;
 	struct addrinfo* result;
@@ -127,7 +147,7 @@ int i = 0 ;
 	if (sock == -1) {
 		perror("Error creating socket");
 	}
-	if (getsockname(sock, (struct sockaddr*)&source, &alen) == -1) {
+	if (getsockname(sock, (struct sockaddr*)&source, (unsigned int *)&alen) == -1) {
 			perror("getsockname");
 			exit(2);
 	}
@@ -194,10 +214,15 @@ int i = 0 ;
 	 * address for the unconnected socket, sock
 	*/
 	cc = recvmsg(sock, &msg, polling);
+
+gettimeofday(&stats.timediff.recieved,NULL);
+
+
 	printf(" message.namelen = [%u]\n", msg.msg_namelen);
 
+		//	stats.timediff.recieved =*  time( NULL );
 
-	printf(" message = [%u]", msg.msg_control);
+//	printf(" message = [%u]", msg.msg_control);
 
 
 
@@ -248,25 +273,57 @@ char *pr_addr(struct sockaddr *sa, socklen_t salen)
 	return str;
 }
 
+void init_stats()
+{
+	stats.failed 	= 0;
 
+gettimeofday(&stats.start,NULL);
+	stats.success 	= 0;
+
+	// stats.timediff.recieved = *localtime( time( NULL ));
+	//  stats.timediff.sent = *localtime( time( NULL ));
+	stats.total_packets  = 0 ;
+}
+
+void  print_timediff(void)
+{
+	suseconds_t diff =  (stats.timediff.recieved.tv_usec-  stats.timediff.sent.tv_usec)  /10;
+	stats.total_packets += 1;
+
+	size_t len = sizeof(	struct icmphdr);
+
+	 printf("\n [%zu ]icmp.seq=%u time=%lu.%lu ms\n" ,len , stats.total_packets  ,diff / 100 ,   diff % 100);
+
+
+}
 
 
 int main(int argc , char **argv)
 {
 	int sockfd;
-stats.success =1 ;
 	signal(SIGINT, handle_sigint);
 	
-const 	char	*ip = hostname_to_ipv6(argv[1]);
+	//init_stats();
 
-printf( "IP = [%s]" , ip );
+
+
+	char	*ip = hostname_to_ipv6(argv[1]);
+
+	init_stats();
+
+
+	printf( "IP = [%s]" , ip );
  	//  init_ping(   argv );
 
 	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-	if(argc > 1)
+	if(ip)
 	while(1)
 	{
+
+	//printf("%d", stats.timediff.recieved->tm_min);
+
 		pinger(ip);
+print_timediff();
 		//send pings continuously
 	 //   send_ping(argv);
 		sleep(1);

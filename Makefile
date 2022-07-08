@@ -3,9 +3,9 @@ NAME = ping
 
 MAIN = ping.c
 
-FLAGS = #-Wall -Wextra -Werror
+FLAGS = -g3 #-Wall -Wextra -Werror
 
-FLAG__DBG = -fsanitize=address
+FLAG__DBG = #-fsanitize=address
 
 SRCDIR = #./src/
 
