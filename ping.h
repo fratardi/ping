@@ -77,6 +77,8 @@ struct timeval 	get_time_diff(struct timeval start, struct timeval end);
 //     struct    addrinfo* ai_next; /* this struct can form a linked list */
 // };
 
+// Icmp header struct 
+
 // struct icmphdr
 // {
 //   uint8_t type;		/* message type */
@@ -97,7 +99,9 @@ struct timeval 	get_time_diff(struct timeval start, struct timeval end);
 //     } frag;			/* path mtu discovery */
 //   } un;
 // };
+
 // ping packet structure
+
 // struct ping_pkt
 // {
 // 	struct icmphdr hdr;

@@ -22,8 +22,8 @@ void fill_icmp_header(struct icmphdr *icp)
     icp->code = 0;
     icp->checksum = 0;
     icp->un.echo.id = htons(getpid());
-    // icp->checksum = in_cksum((unsigned short *)icp, sizeof(struct icmphdr));
     icp->un.echo.id = htons(getpid());
+    //// needs checksum filled 
 }
 
 char *hostname_to_ipv6(char *hostname)
