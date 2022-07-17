@@ -107,3 +107,17 @@ struct timeval 	get_time_diff(struct timeval start, struct timeval end);
 // 	struct icmphdr hdr;
 // 	char msg[PING_PKT_S-sizeof(struct icmphdr)];
 // };
+
+
+
+/// Domain	
+	//  AF_INET      IPv4 Internet protocols         	       	    ip(7)
+	//  AF_INET      IPv4 Internet protocols        	            ip(7)
+/// Type
+	// SOCK_DGRAM UDP datagram socket                   	         udp(7)
+/// Protocol
+	// IPPROTO_ICMP Internet Control Message Protocol (ICMP)         icmp(7)
+	//  int socket(int domain, int type, int protocol);
+/// https://stackoverflow.com/questions/5815675/what-is-sock-dgram-and-sock-stream
+
+/// http://www.faqs.org/rfcs/rfc1071.html  for the checksum

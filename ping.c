@@ -3,6 +3,8 @@
 struct s_stats stats;
 
 
+#define __null 0
+
 
 void handle_sigint(int sig)
 {  
@@ -16,49 +18,52 @@ void handle_sigint(int sig)
 	free (stats.ip);
 	exit(EXIT_SUCCESS);
 }
-uint16_t checksum(const unsigned short *addr, register int len, unsigned short csum)
+/*
+ * @struct timeval get_time_diff(struct timeval start, struct timeval end)
+ * @brief calcul de la difference de temps entre deux temps
+ * @param start : temps de depart
+ * @param end : temps d'arrivee
+ * @return struct timeval : difference de temps
+* */
+
+
+uint16_t checksum_packet(struct icmphdr *icp)
 {
-	register int nleft = len;
-	const unsigned short *word = addr;
-	register uint16_t  answer;
-	register int sum = csum;
-	/*
-	 *  Our algorithm is simple, using a 32 bit accumulator (sum),
-	 *  we add sequential 16 bit words to it, and at the end, fold
-	 *  back all the carry bits from the top 16 bits into the lower
-	 *  16 bits.
-	 */
-	while (nleft > 1)  {
-		sum += *word++;
+	uint16_t *addr = (uint16_t *)icp;
+	int len = sizeof(struct icmphdr) + sizeof(struct timeval);
+	int sum = 0;
+	int nleft = len;
+	while (nleft > 1) {
+		sum += *addr++;
 		nleft -= 2;
 	}
-	/* mop up an odd byte, if necessary */
 	if (nleft == 1)
-		sum += ODDBYTE(*(unsigned char *)word); /* le16toh() may be unavailable on old systems */
-	/*
-	 * add back carry outs from top 16 bits to low 16 bits
-	 */
-	sum = (sum >> 16) + (sum & 0xffff);	/* add hi 16 to low 16 */
-	sum += (sum >> 16);			/* add carry */
-	answer = ~sum;				/* truncate to 16 bits */
-	return (answer);
+		sum += *(unsigned char *)addr;
+	sum = (sum >> 16) + (sum & 0xffff);
+	sum += (sum >> 16);
+	return (uint16_t)~sum;
 }
 
 
 
 
+#include <sys/uio.h>
+#include <sys/socket.h>
+
+
 int pinger(char *str )
 {
-	int error;
-	int sock = 0 ;
-	int  alen = 0;
-	int datalen = 56;
-	int ntransmitted = 0;
-	int i = 0 ;
-	int polling;
-	int packlen = datalen + MAXIPLEN + MAXICMPLEN;
-	int csfailed;
-	unsigned char *packet = NULL;
+	int 	error;
+	int 	sock = 0 ;
+	int		alen = 0;
+	int 	datalen = 56;
+	int 	ntransmitted = 0;
+	int 	i = 0 ;
+	int 	polling;
+	int 	packlen = datalen + MAXIPLEN + MAXICMPLEN;
+	int 	csfailed;
+
+	unsigned char *packet_buffer = NULL;
 	char addrbuf[128];
 	char hostname[NI_MAXHOST];
 	
@@ -71,16 +76,17 @@ int pinger(char *str )
 
 	struct sockaddr_in source ;
 	struct sockaddr_in dst  ;
-	memset((char *)&dst, 0, sizeof(dst));
-	memset((char *)&source, 0, sizeof(source));
+	memset((char *)&dst, 	0, 		sizeof(dst));
+	memset((char *)&source, 0,	 	sizeof(source));
 	source .sin_family = AF_INET ;
-
-	dst .sin_family = AF_INET ;
-	dst.sin_family = AF_INET;
+		dst.sin_family = AF_INET;
 
 
 	struct msghdr msg;
 	struct iovec iov;
+
+	memset((char *)&iov,  0,sizeof(	struct iovec));
+
 
 	getaddrinfo(str, NULL, NULL, &result);
 	memset(&msg, 0 ,sizeof(struct msghdr));
@@ -91,20 +97,15 @@ int pinger(char *str )
 	 * so that we can set the source IP correctly
 	 */
 	/* arv[1] is supposed to be an IP address */
+	
+//inet_pton(AF_INET, str, &dst.sin_addr);
+
 	if (inet_aton(str, &dst.sin_addr) == 0) {
 		fprintf(stderr, "The first argument must be an IP address\n");
 		exit(1);
 	}
 	dst.sin_port = htons(NI_MAXHOST);
 
-/// Domain	
-	//  AF_INET      IPv4 Internet protocols         	       	    ip(7)
-	//  AF_INET      IPv4 Internet protocols        	            ip(7)
-/// Type
-	// SOCK_DGRAM UDP datagram socket                   	         udp(7)
-/// Protocol
-	// IPPROTO_ICMP Internet Control Message Protocol (ICMP)         icmp(7)
-	//  int socket(int domain, int type, int protocol);
 	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
 
 
@@ -112,7 +113,6 @@ int pinger(char *str )
 		perror("Error creating socket");
 	}
 		// int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
-
 	if (getsockname(sock, (struct sockaddr*)&source, (unsigned int *)&alen) == -1) {
 			perror("getsockname");
 			exit(2);
@@ -121,11 +121,11 @@ int pinger(char *str )
 	 * Since we use IPPROTO_ICMP, we just have to create the
 	 * ICMP packet
 	 */
-	if (!(packet = (unsigned char *)malloc((unsigned int)packlen))) {
+	if (!(packet_buffer = (unsigned char *)malloc((unsigned int)packlen))) {
 		fprintf(stderr, "ping: out of memory.\n");
 		exit(2);
 	}
-	icp = (struct icmphdr *)packet;
+	icp = (struct icmphdr *)packet_buffer;
 	(void)memset(icp, 0 ,sizeof(struct icmphdr));
 	/* We are sending a ICMP_ECHO ICMP packet */
 	icp->type = ICMP_ECHO;
@@ -142,6 +142,9 @@ int pinger(char *str )
 	/* compute ICMP checksum here */
 	int cc = datalen + 8;
 //	icp->checksum = checksum((unsigned short *)icp, cc, 0);
+
+	checksum_packet(icp);
+
 	/* send the ICMP packet*/
 	gettimeofday(&stats.timediff.sent,NULL);
 
@@ -168,7 +171,7 @@ int pinger(char *str )
 	 * https://www.safaribooksonline.com/library/view/linux-system-programming/9781449341527/ch04.html
 	 */
 
-	iov.iov_base = (char *) packet;
+	iov.iov_base = (char *) packet_buffer;
 	iov.iov_len = packlen;
 	msg.msg_iov = &iov;
 	msg.msg_iovlen = 1;
@@ -188,7 +191,7 @@ int pinger(char *str )
 	}
 	buf = msg.msg_iov->iov_base;
 	icp_reply = (struct icmphdr *)buf;
-	csfailed = checksum((unsigned short *)icp_reply, cc, 0);
+	csfailed = checksum_packet(icp_reply);
 	if (csfailed) {
 		printf("(BAD CHECKSUM)");
 		exit(1);
@@ -210,11 +213,15 @@ int pinger(char *str )
 	} else {
 		printf("Not a ICMP_ECHOREPLY\n");
 	}
-	free(packet);
+	free(packet_buffer);
 	freeaddrinfo(result);
 	printf("size%lu" , sizeof( socklen_t) * 8);
 	return 0;
 }
+
+/*
+ * Checksum routine for ICMP packets.
+ * */
 
 void init_stats(int argc , char **argv)
 {
@@ -238,17 +245,9 @@ void  print_ligne_intermediaire(void)
 
 int main(int argc , char **argv)
 {
-
-
-	(void)argv;
-	(void)argc;
-
-	int sockfd;
 	signal(SIGINT, handle_sigint);
-
 	init_stats(argc,  argv);
 	printf( "IP = [%s]" , stats.ip );
-	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if(stats.ip)
 	while(1)
 	{
