@@ -24,38 +24,46 @@ void fill_icmp_header(struct icmphdr *icp)
     icp->un.echo.id = htons(getpid());
     icp->un.echo.id = htons(getpid());
     //// needs checksum filled 
+
+	checksum_packet(icp);
+}
+
+
+void init_icp_header(struct icmphdr *icp)
+{
+    (void)memset(icp, 0 ,sizeof(struct icmphdr));
+    icp->type = ICMP_ECHO;
+    icp->code = 0;
+    icp->checksum = 0;
+    icp->un.echo.sequence =  0 ;
+}
+
+
+struct addrinfo init_hints(struct addrinfo 	*hints)
+{
+    memset(hints, 0, sizeof(struct addrinfo));
+    hints->ai_family = AF_INET;
+    hints->ai_socktype = SOCK_STREAM;
+    hints->ai_flags = AI_PASSIVE;
+    return(*hints);
 }
 
 char *hostname_to_ipv6(char *hostname)
 {
-    struct addrinfo 	hints;
+    struct addrinfo 	hints = init_hints(&hints);
    	struct addrinfo     *servinfo;
-	struct addrinfo 	*p;
+	struct addrinfo 	*p = NULL;
     int rv;
     char ip[INET_ADDRSTRLEN == 0 ? 1: 256];
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_INET;
-    //hints.ai_family = AF_INET6;
-    hints.ai_socktype = SOCK_STREAM;
     if ((rv = getaddrinfo(hostname, NULL, &hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
         return NULL;
     }
     for (p = servinfo; p != NULL; p = p->ai_next) {
         void *addr;
-        char *ipver;
-      //  if (p->ai_family == AF_INET) {
-            struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
-            addr = &(ipv4->sin_addr);
-            ipver = "IPv4";
-      //  }
-		//  else {
-        //     struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)p->ai_addr;
-        //     addr = &(ipv6->sin6_addr);
-        //     ipver = "IPv6";
-        // }
+        struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+        addr = &(ipv4->sin_addr);
         inet_ntop(p->ai_family, addr, ip, sizeof ip);
-        printf("%s: %s\n", ipver, ip);
     }
     freeaddrinfo(servinfo);
     return strdup(ip);

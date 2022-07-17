@@ -5,9 +5,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
- 
 
-# Make data base, printed on Sun Jul 17 06:06:36 2022
+# Make data base, printed on Sun Jul 17 09:47:47 2022
 
 # Variables
 
@@ -118,6 +117,7 @@ GIO_LAUNCHED_DESKTOP_FILE_PID = 163002
 # environment
 DISPLAY = :0
 # makefile (from 'Makefile', line 10)
+ 
 SRCDIR = 
 # environment
 VSCODE_PIPE_LOGGING = true
@@ -190,7 +190,7 @@ MAKE_COMMAND := make
 # environment
 OLDPWD = /mnt/nfs/homes/fratardi
 # makefile (from 'Makefile', line 16)
-FUNCTIONS = print1.c
+FUNCTIONS = print1.c   pinger.c 
 # environment
 TERMINATOR_DBUS_PATH = /net/tenshu/Terminator2
 # default
@@ -262,7 +262,7 @@ VSCODE_PID = 168628
 # environment
 TERMINATOR_UUID = urn:uuid:d1faa75e-115c-4164-ad5c-2060a7e218bd
 # variable set hash-table stats:
-# Load=125/1024=12%, Rehash=0, Collisions=31/158=20%
+# Load=125/1024=12%, Rehash=0, Collisions=31/163=19%
 
 # Pattern-specific Variable Values
 
@@ -270,9 +270,9 @@ TERMINATOR_UUID = urn:uuid:d1faa75e-115c-4164-ad5c-2060a7e218bd
 
 # Directories
 
-# . (device 55, inode 197756409): 13 files, no impossibilities.
+# . (device 55, inode 197756409): 14 files, no impossibilities.
 
-# 13 files, no impossibilities in 1 directories.
+# 14 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -289,29 +289,39 @@ all: ping
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
 
 # Not a target:
 ping.c:
 #  Implicit rule search has been done.
- 
-#  Last modified 2022-07-17 06:01:58.135983092
+#  Last modified 2022-07-17 09:47:47.591587756
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-17 06:01:36.16201071
+#  Last modified 2022-07-17 09:47:39.836597141
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 ping.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-17 06:01:36.183010684
+#  Last modified 2022-07-17 09:47:21.95461878
 #  File has been updated.
 #  Successfully updated.
+
+pinger.o: pinger.c ping.h
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'pinger'
+#  Last modified 2022-07-17 09:47:42.031594485
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 25):
+	$(COMPILER) $(FLAGS) -o $@ -c $<
 
 fclean: clean
 #  Implicit rule search has not been done.
@@ -324,7 +334,7 @@ fclean: clean
 print1.o: print1.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'print1'
-#  Last modified 2022-07-17 06:01:59.858980926
+#  Last modified 2022-07-17 09:47:41.951594581
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -357,43 +367,71 @@ dbg: ping
 	$(COMPILER) $(FLAG__DBG) -o $(NAME) $(SRCO)
 
 # Not a target:
-print1.c:
+pinger.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-17 06:01:36.195010669
+#  Last modified 2022-07-17 09:47:23.085617412
 #  File has been updated.
 #  Successfully updated.
 
-ping: print1.o ping.o
-#  Implicit rule search has not been done.
-#  Last modified 2022-07-17 06:02:00.01498073
+# Not a target:
+print1.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-07-17 09:45:44.104737193
 #  File has been updated.
 #  Successfully updated.
+
+ping: print1.o pinger.o ping.o
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
 #  recipe to execute (from 'Makefile', line 31):
 	$(COMPILER) $(FLAGS) $(FLAG__DBG) -o $(NAME) $(SRCO)
 
 ping.o: ping.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'ping'
-#  Last modified 2022-07-17 06:01:59.924980843
+#  Last modified 2022-07-17 09:47:42.107594393
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# automatic
+ 
+# @ := ping.o
+# automatic
+# % := 
+# automatic
+# * := ping
+# automatic
+# + := ping.c ping.h
+# automatic
+# | := 
+# automatic
+# < := ping.c
+# automatic
+# ^ := ping.c ping.h
+# automatic
+# ? := ping.c
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/15=7%
 #  recipe to execute (from 'Makefile', line 25):
 	$(COMPILER) $(FLAGS) -o $@ -c $<
 
 # files hash-table stats:
-# Load=14/1024=1%, Rehash=0, Collisions=0/43=0%
+# Load=16/1024=2%, Rehash=0, Collisions=0/51=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 25 / storage = 177 B / avg = 7 B
-# current buf: size = 8162 B / used = 177 B / count = 25 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 28 / storage = 202 B / avg = 7 B
+# current buf: size = 8162 B / used = 202 B / count = 28 / avg = 7 B
 
-# strcache performance: lookups = 54 / hit rate = 53%
+# strcache performance: lookups = 61 / hit rate = 54%
 # hash-table stats:
-# Load=25/8192=0%, Rehash=0, Collisions=1/54=2%
-# Finished Make data base on Sun Jul 17 06:06:36 2022
+# Load=28/8192=0%, Rehash=0, Collisions=1/61=2%
+# Finished Make data base on Sun Jul 17 09:47:47 2022
 
  

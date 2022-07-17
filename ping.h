@@ -41,11 +41,17 @@ struct s_stats{
 // typedef struct  s_stats{
 //     int truc;
 // }               t_stats;
+
+int pinger(char *str );
 void 			handle_sigint(int sig);
 void 			print_stats();
 void 			init_ping();
 char 			*hostname_to_ipv6(char *hostname);
 struct timeval 	get_time_diff(struct timeval start, struct timeval end);
+
+uint16_t checksum_packet(struct icmphdr *icp);
+
+void init_icp_header(struct icmphdr *icp);
 #define PORT_NO 		0
 #define MAXIPLEN  		60
 #define MAXICMPLEN 		76
@@ -120,4 +126,8 @@ struct timeval 	get_time_diff(struct timeval start, struct timeval end);
 	//  int socket(int domain, int type, int protocol);
 /// https://stackoverflow.com/questions/5815675/what-is-sock-dgram-and-sock-stream
 
-/// http://www.faqs.org/rfcs/rfc1071.html  for the checksum
+/// http://www.faqs.org/rfcs/rfc1071.html  for the checksum calculation
+
+
+
+		// int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
