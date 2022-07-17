@@ -2,6 +2,8 @@
 
 struct s_stats stats;
 
+
+
 void handle_sigint(int sig)
 {  
 	(void)sig;
@@ -59,13 +61,24 @@ int pinger(char *str )
 	unsigned char *packet = NULL;
 	char addrbuf[128];
 	char hostname[NI_MAXHOST];
+	
 	struct icmphdr *icp_reply = NULL;
 	struct icmphdr *buf = NULL;
 	struct icmphdr *icp = NULL;
+
 	struct addrinfo* result = NULL;
 	struct addrinfo* res;
-	struct sockaddr_in source = { .sin_family = AF_INET };
-	struct sockaddr_in dst;
+
+	struct sockaddr_in source ;
+	struct sockaddr_in dst  ;
+	memset((char *)&dst, 0, sizeof(dst));
+	memset((char *)&source, 0, sizeof(source));
+	source .sin_family = AF_INET ;
+
+	dst .sin_family = AF_INET ;
+	dst.sin_family = AF_INET;
+
+
 	struct msghdr msg;
 	struct iovec iov;
 
@@ -77,19 +90,29 @@ int pinger(char *str )
 	 * on port 1025 to the destination host
 	 * so that we can set the source IP correctly
 	 */
-	memset((char *)&dst, 0, sizeof(dst));
-	dst.sin_family = AF_INET;
 	/* arv[1] is supposed to be an IP address */
 	if (inet_aton(str, &dst.sin_addr) == 0) {
 		fprintf(stderr, "The first argument must be an IP address\n");
 		exit(1);
 	}
 	dst.sin_port = htons(NI_MAXHOST);
-	// Create a socket
+
+/// Domain	
+	//  AF_INET      IPv4 Internet protocols         	       	    ip(7)
+	//  AF_INET      IPv4 Internet protocols        	            ip(7)
+/// Type
+	// SOCK_DGRAM UDP datagram socket                   	         udp(7)
+/// Protocol
+	// IPPROTO_ICMP Internet Control Message Protocol (ICMP)         icmp(7)
+	//  int socket(int domain, int type, int protocol);
 	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
+
+
 	if (sock == -1) {
 		perror("Error creating socket");
 	}
+		// int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+
 	if (getsockname(sock, (struct sockaddr*)&source, (unsigned int *)&alen) == -1) {
 			perror("getsockname");
 			exit(2);
@@ -106,6 +129,9 @@ int pinger(char *str )
 	(void)memset(icp, 0 ,sizeof(struct icmphdr));
 	/* We are sending a ICMP_ECHO ICMP packet */
 	icp->type = ICMP_ECHO;
+//icp->type = 16;
+
+	
 	icp->code = 0;
 	icp->checksum = 0;
 	icp->un.echo.sequence = htons(ntransmitted+1);
@@ -115,16 +141,23 @@ int pinger(char *str )
 	 */
 	/* compute ICMP checksum here */
 	int cc = datalen + 8;
-	icp->checksum = checksum((unsigned short *)icp, cc, 0);
+//	icp->checksum = checksum((unsigned short *)icp, cc, 0);
 	/* send the ICMP packet*/
 	gettimeofday(&stats.timediff.sent,NULL);
+
+
+
 	sendto(sock, icp, cc, 0, (struct sockaddr*)&dst, sizeof(dst));
 	printf("Sent %d bytes\n", i);
 	/* We have sent the packet, time to attempt to read
 	 * the reply
 	 * */
-	iov.iov_base = (char *) packet;
-	iov.iov_len = packlen;
+
+
+	printf(  " packlen -==  [%d]\n" , packlen);  
+//	printf(  " packet -==  [%s]\n" ,packet);  
+
+
 	memset(&msg, 0, sizeof(msg));
 	/* check recvmsg() to understand the reasoning/meaning
 	 * for the different fields
@@ -134,6 +167,9 @@ int pinger(char *str )
 	/* Learn more: 
 	 * https://www.safaribooksonline.com/library/view/linux-system-programming/9781449341527/ch04.html
 	 */
+
+	iov.iov_base = (char *) packet;
+	iov.iov_len = packlen;
 	msg.msg_iov = &iov;
 	msg.msg_iovlen = 1;
 	/* We do a blocking wait here */
@@ -163,6 +199,10 @@ int pinger(char *str )
 	 * If we were using a RAW socket, we would need to do that.
 	 * */
 	// struct sockaddr_in *from = msg.msg_name;
+
+ printf("Reply type %d", icp_reply->type);
+
+
 	if (icp_reply->type == ICMP_ECHOREPLY) {
 		  // printf("%s\n", pr_addr(from, sizeof *from));
 		   printf("Reply of %d bytes received ", cc);
@@ -176,12 +216,15 @@ int pinger(char *str )
 	return 0;
 }
 
-void init_stats()
+void init_stats(int argc , char **argv)
 {
-	stats.success 				= 0;
-	stats.total_packets 		= 0;
-	stats.failed 				= 0;
-	gettimeofday(&stats.start,NULL);
+	(void)argc,
+	(void)argv;
+	stats.ip = hostname_to_ipv6(argv[1]);
+	stats.success 				= 0,
+	stats.total_packets 		= 0,
+	stats.failed 				= 0,
+	gettimeofday(&stats.start, NULL);
 
 }
 
@@ -193,14 +236,17 @@ void  print_ligne_intermediaire(void)
 	printf("\n [%zu ]icmp.seq=%u time=%lu.%lu ms\n" ,len , stats.total_packets  ,diff / 100 ,   diff % 100);
 }
 
-
 int main(int argc , char **argv)
 {
+
+
+	(void)argv;
 	(void)argc;
+
 	int sockfd;
 	signal(SIGINT, handle_sigint);
-	stats.ip = hostname_to_ipv6(argv[1]);
-	init_stats();
+
+	init_stats(argc,  argv);
 	printf( "IP = [%s]" , stats.ip );
 	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if(stats.ip)
@@ -214,3 +260,4 @@ int main(int argc , char **argv)
 }
 
 
+//
