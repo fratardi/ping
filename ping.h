@@ -131,3 +131,5 @@ void init_icp_header(struct icmphdr *icp);
 
 
 		// int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+
+// https://www.geeksforgeeks.org/ping-in-c/

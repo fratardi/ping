@@ -4,8 +4,21 @@
 extern struct s_stats stats;
 
 
+int set_ttl(int sock, int n)
+{
+	int ret;
+	ret = setsockopt(sock, IPPROTO_IP, IP_TTL, &n, sizeof(n));
+	if (ret == -1)
+		perror("setsockopt");
+	return ret;
+}
+
+
+
 int pinger(char *str )
 {
+	
+	
 	int 	error;
 	int 	sock = 0 ;
 	int		alen = 0;
@@ -39,7 +52,7 @@ int pinger(char *str )
 	memset((char *)&iov,  0,sizeof(	struct iovec));
 	memset(&msg, 0 ,sizeof(struct msghdr));
 
-	getaddrinfo(str, NULL, NULL, &result);
+	getaddrinfo(str, NULL, NULL, &result);	
 	res = result;
 	error = getnameinfo(res->ai_addr, res->ai_addrlen, hostname, NI_MAXHOST, NULL, 0, 0); 
 	if (inet_aton(str, &dst.sin_addr) == 0) {
@@ -64,6 +77,9 @@ int pinger(char *str )
 	init_icp_header(icp);
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
+
+	set_ttl(sock , 255);
+
 	sendto(sock, icp, cc, 0, (struct sockaddr*)&dst, sizeof(dst));
 	printf("Sent %d bytes\n", i);
 	memset(&msg, 0, sizeof(msg));
