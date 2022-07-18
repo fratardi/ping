@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jul 18 18:40:55 2022
+# Make data base, printed on Mon Jul 18 18:49:26 2022
 
 # Variables
 
@@ -75,9 +75,9 @@ MANAGERPID = 948576
 # environment
 NVM_PATH = /mnt/nfs/homes/fratardi/.nvm/versions/node/v10.19.0/lib/node
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/31706/vscode-ipc-add23013-c5f6-499e-907f-1b4a8847bc82.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/31706/vscode-ipc-b5520c70-98fc-4746-83b0-a3fa2b358e5b.sock
 # environment
-VSCODE_CWD = /mnt/nfs/homes/fratardi/ping
+VSCODE_CWD = /mnt/nfs/homes/fratardi
 # environment
 XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session20
 # environment
@@ -111,7 +111,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/31706/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 949453
+GIO_LAUNCHED_DESKTOP_FILE_PID = 958864
 # automatic
 %F = $(notdir $%)
 # environment
@@ -229,7 +229,6 @@ MAKEFILES :=
 # environment
 LC_ALL = C
 # environment
- 
 NVM_NODEJS_ORG_MIRROR = https://nodejs.org/dist
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
@@ -258,9 +257,9 @@ TERMINATOR_DBUS_NAME = net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873
 # environment
 DOCKER_HOST = unix:///run/user/31706/docker.sock
 # environment
-VSCODE_PID = 956802
+VSCODE_PID = 959043
 # environment
-TERMINATOR_UUID = urn:uuid:10a0213d-ebcb-4047-bb6d-d48dbc615a2d
+TERMINATOR_UUID = urn:uuid:8766f7f4-c416-4fb8-83e9-7e7bacbfca14
 # variable set hash-table stats:
 # Load=125/1024=12%, Rehash=0, Collisions=31/158=20%
 
@@ -280,6 +279,7 @@ TERMINATOR_UUID = urn:uuid:10a0213d-ebcb-4047-bb6d-d48dbc615a2d
 #  recipe to execute (from 'Makefile', line 25):
 	$(COMPILER) $(FLAGS) -o $@ -c $<
 
+ 
 # 1 implicit rules, 0 (0.0%) terminal.
 
 # Files
@@ -308,14 +308,14 @@ Makefile:
 # Not a target:
 ping.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-17 09:47:21.95461878
+#  Last modified 2022-07-18 18:41:46.927849658
 #  File has been updated.
 #  Successfully updated.
 
 pinger.o: pinger.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'pinger'
-#  Last modified 2022-07-17 09:52:06.632274281
+#  Last modified 2022-07-18 18:45:06.107643861
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -332,7 +332,7 @@ fclean: clean
 print1.o: print1.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'print1'
-#  Last modified 2022-07-17 09:52:06.570274356
+#  Last modified 2022-07-18 18:45:06.040643931
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -367,7 +367,7 @@ dbg: ping
 # Not a target:
 pinger.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-17 09:52:04.214277207
+#  Last modified 2022-07-18 18:45:03.767646279
 #  File has been updated.
 #  Successfully updated.
 
@@ -380,7 +380,7 @@ print1.c:
 
 ping: print1.o pinger.o ping.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-17 09:52:06.803274074
+#  Last modified 2022-07-18 18:45:06.294643668
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 31):
@@ -389,7 +389,7 @@ ping: print1.o pinger.o ping.o
 ping.o: ping.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'ping'
-#  Last modified 2022-07-17 09:52:06.693274207
+#  Last modified 2022-07-18 18:45:06.168643798
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -409,6 +409,6 @@ ping.o: ping.c ping.h
 # strcache performance: lookups = 62 / hit rate = 54%
 # hash-table stats:
 # Load=28/8192=0%, Rehash=0, Collisions=1/62=2%
-# Finished Make data base on Mon Jul 18 18:40:55 2022
+# Finished Make data base on Mon Jul 18 18:49:26 2022
 
  

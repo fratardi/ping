@@ -133,3 +133,18 @@ void init_icp_header(struct icmphdr *icp);
 		// int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 
 // https://www.geeksforgeeks.org/ping-in-c/
+
+// set
+
+// #define IP_OPTIONS          1           /* set/get IP per-packet options    */
+// #define IP_MULTICAST_IF     2           /* set/get IP multicast interface   */
+// #define IP_MULTICAST_TTL    3           /* set/get IP multicast timetolive  */
+// #define IP_MULTICAST_LOOP   4           /* set/get IP multicast loopback    */
+// #define IP_ADD_MEMBERSHIP   5           /* add  an IP group membership      */
+// #define IP_DROP_MEMBERSHIP  6           /* drop an IP group membership      */
+// #define IP_TTL              7           /* set/get IP Time To Live          */
+// #define IP_TOS              8           /* set/get IP Type Of Service       */
+// #define IP_DONTFRAGMENT     9           /* set/get IP Don't Fragment flag   */
+// #define IP_DEFAULT_MULTICAST_TTL   1    /* normally limit m'casts to 1 hop  */
+// #define IP_DEFAULT_MULTICAST_LOOP  1    /* normally hear sends if a member  */
+// #define IP_MAX_MEMBERSHIPS         20   /* per socket; must fit in one mbuf */

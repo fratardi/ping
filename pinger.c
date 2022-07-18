@@ -4,6 +4,14 @@
 extern struct s_stats stats;
 
 
+
+
+/// 
+
+// IPPROTO_IP
+//     Internet protocol.
+// IPPROTO_IPV6
+//     [IP6] [Option Start] Internet Protocol Version 6. [Option End]
 int set_ttl(int sock, int n)
 {
 	int ret;
