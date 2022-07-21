@@ -21,16 +21,85 @@ int set_ttl(int sock, int n)
 	return ret;
 }
 
+// print sockaddr_in struct	
+void print_sockaddr_in(struct sockaddr_in *addr)
+{
+	printf("sin_family: %d\n", addr->sin_family);
+	printf("sin_port: %d\n", addr->sin_port);
+	printf("sin_addr: %s\n", inet_ntoa(addr->sin_addr));
+}
+
+// print in6_addr struct
+void print_in6_addr(struct in6_addr *addr)
+{
+	int i;
+	for (i = 0; i < 16; i++)
+		printf("%02x", addr->s6_addr[i]);
+	printf("\n");
+}
+
+// print sockaddr_in6 struct
+void print_sockaddr_in6(struct sockaddr_in6 *addr)
+{
+
+	printf("sin6_port: %d\n", addr->sin6_port);
+	printf("sin6_flowinfo: %d\n", addr->sin6_flowinfo);
+	print_in6_addr(&addr->sin6_addr);
+	printf("sin6_scope_id: %d\n", addr->sin6_scope_id);
+}
+
+// print icmp struct
+void print_icmp(struct icmp *icmp)
+{
+	printf("icmp_type: %d\n", icmp->icmp_type);
+	printf("icmp_code: %d\n", icmp->icmp_code);
+	printf("icmp_cksum: %d\n", icmp->icmp_cksum);
+	printf("icmp_id: %d\n", icmp->icmp_id);
+	printf("icmp_seq: %d\n", icmp->icmp_seq);
+}
+
+
+
+//hostname to ipv4 address
+int hostname_to_ipv4(char *hostname, struct in_addr *addr)
+{
+	struct hostent *h;
+	h = gethostbyname(hostname);
+	if (h == NULL)
+		return -1;
+	addr->s_addr = *(long *)h->h_addr;
+	return 0;
+}
+
+//hostname to ipv6 address
+int hostname_to_ip6(char *hostname, struct in6_addr *addr)
+{
+	struct hostent *h;
+	h = gethostbyname2(hostname, AF_INET6);
+	if (h == NULL)
+		return -1;
+	memcpy(addr, h->h_addr, h->h_length);
+	return 0;
+}
+
+
+
+
 
 
 int pinger(char *str )
 {
-	
-	
+
+	printf("dom == [%s]", stats.from);
+
+
 	int 	error;
 	int 	sock = 0 ;
 	int		alen = 0;
 	int 	datalen = 56;
+
+
+
 	int 	i = 0 ;
 	
 	int 	packlen = datalen + MAXIPLEN + MAXICMPLEN;
@@ -76,7 +145,8 @@ int pinger(char *str )
 	if (getsockname(sock, (struct sockaddr*)&source, (unsigned int *)&alen) == -1) {
 			perror("getsockname");
 			exit(2);
-	}
+
+
 	if (!(packet_buffer = (unsigned char *)malloc((unsigned int)packlen))) {
 		fprintf(stderr, "ping: out of memory.\n");
 		exit(2);
@@ -124,6 +194,13 @@ int pinger(char *str )
 
 
 		print_ligne_intermediaire();
+
+	}
+
+	print_sockaddr_in(&source);
+		
+
+	print_sockaddr_in(&dst);
 
 
 

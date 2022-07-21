@@ -48,9 +48,43 @@ struct addrinfo init_hints(struct addrinfo 	*hints)
     return(*hints);
 }
 
+
+
+// reverse dns lookup from ipv4 to hostname
+char *ipv4_to_hostname(char *ipv4)
+{
+    struct addrinfo 	hints = init_hints(&hints);
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
+    struct addrinfo     *servinfo;
+    struct addrinfo 	*p = NULL;
+    int rv;
+    char hostname[INET_ADDRSTRLEN == 0 ? 1: 256];
+    if ((rv = getaddrinfo(ipv4, NULL, &hints, &servinfo)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        return NULL;
+    }
+     for (p = servinfo; p != NULL; p = p->ai_next) {
+         void *addr;
+        struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+        addr = &(ipv4->sin_addr);
+        getnameinfo(p->ai_addr, p->ai_addrlen, hostname, sizeof hostname, NULL, 0, NI_NAMEREQD);
+         printf("%s\n", hostname);
+     }
+    freeaddrinfo(servinfo);
+    return strdup(hostname);
+}
+
+
+
+
+
 char *hostname_to_ipv6(char *hostname)
 {
     struct addrinfo 	hints = init_hints(&hints);
+hints.ai_family = AF_INET;
+
    	struct addrinfo     *servinfo;
 	struct addrinfo 	*p = NULL;
     int rv;
@@ -64,16 +98,29 @@ char *hostname_to_ipv6(char *hostname)
         struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
         addr = &(ipv4->sin_addr);
         inet_ntop(p->ai_family, addr, ip, sizeof ip);
+
+        printf("%s\n", ip);
     }
+
+
+
+    stats.from = ipv4_to_hostname(ip);
     freeaddrinfo(servinfo);
     return strdup(ip);
 }
+
+
+
+
 
 void init_ping( char  **argv )
 {
     struct addrinfo* result;
     struct addrinfo* res;
     int error;
+
+
+    
     /* resolve the domain name into a list of addresses */
     if ((error =  getaddrinfo(argv[1], NULL, NULL, &result))) {   
         if (error == EAI_SYSTEM) {
@@ -96,4 +143,7 @@ void init_ping( char  **argv )
             printf("hostname: %s\n", hostname);
         res = res->ai_next;
     }   
+
+
+    stats.from = ipv4_to_hostname(argv[1]);
 }

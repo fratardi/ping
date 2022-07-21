@@ -3,8 +3,6 @@
 struct s_stats stats;
 
 
-#define __null 0
-
 
 void handle_sigint(int sig)
 {  
@@ -59,7 +57,18 @@ void init_stats(int argc , char **argv)
 {
 	(void)argc,
 	(void)argv;
+
+
+
 	stats.ip = hostname_to_ipv6(argv[1]);
+	printf(
+		"PING %s (%s): %d(%d) bytes of data.\n",
+		argv[1],
+		stats.ip,
+		PING_PKT_S,
+		PING_PKT_S + 28
+	);
+
 	stats.success 				= 0,
 	stats.total_packets 		= 0,
 	stats.failed 				= 0,
@@ -84,7 +93,6 @@ int main(int argc , char **argv)
 	while(1)
 	{
 		pinger(stats.ip);
-		print_ligne_intermediaire();
 		sleep(1);
 	}
 	return(0);

@@ -29,6 +29,7 @@ struct 		s_timediff	{
 typedef
 struct s_stats{
 	char * ip;
+	char * from;
 	unsigned int        total_packets;
 	unsigned int		success;
 	unsigned int		failed;
@@ -56,7 +57,7 @@ void init_icp_header(struct icmphdr *icp);
 #define PORT_NO 		0
 #define MAXIPLEN  		60
 #define MAXICMPLEN 		76
-#define PING_PKT_S 		64
+#define PING_PKT_S 		56
 #define RECV_TIMEOUT 	1
 
 
@@ -86,6 +87,19 @@ void init_icp_header(struct icmphdr *icp);
 //     char*     ai_canonname;      /* canonical name */
 //     struct    addrinfo* ai_next; /* this struct can form a linked list */
 // };
+
+
+// struct in6_addr
+//   {
+//     union
+//       {
+// 	uint8_t	__u6_addr8[16];
+// 	uint16_t __u6_addr16[8];
+// 	uint32_t __u6_addr32[4];
+//       } __in6_u;
+
+//   };
+
 
 // Icmp header struct 
 
