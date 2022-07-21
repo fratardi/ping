@@ -32,7 +32,7 @@ int pinger(char *str )
 	int		alen = 0;
 	int 	datalen = 56;
 	int 	i = 0 ;
-	int 	polling;
+	
 	int 	packlen = datalen + MAXIPLEN + MAXICMPLEN;
 
 	unsigned char *packet_buffer = NULL;
@@ -86,10 +86,13 @@ int pinger(char *str )
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
 
-	set_ttl(sock , 255);
+	set_ttl(sock , 12);
+
+	//sizetosend(packlen);
+	
 
 	sendto(sock, icp, cc, 0, (struct sockaddr*)&dst, sizeof(dst));
-	printf("Sent %d bytes\n", i);
+	printf("Sent %d bytes", i);
 	memset(&msg, 0, sizeof(msg));
 	msg.msg_name = addrbuf;
 	msg.msg_namelen = sizeof(addrbuf);
@@ -97,8 +100,8 @@ int pinger(char *str )
 	iov.iov_len = packlen;
 	msg.msg_iov = &iov;
 	msg.msg_iovlen = 1;
-	polling = MSG_WAITALL;
-	cc = recvmsg(sock, &msg, polling);
+
+	cc = recvmsg(sock, &msg, MSG_WAITALL);
 	gettimeofday(&stats.timediff.recieved,NULL);
 	printf(" message.namelen = [%u]\n", msg.msg_namelen);
 	if (cc  < 0 ){
@@ -107,10 +110,10 @@ int pinger(char *str )
 	}
 	buf = msg.msg_iov->iov_base;
 	icp_reply = (struct icmphdr *)buf;
-	if (checksum_packet(icp_reply)) {
-		printf("(BAD CHECKSUM)");
-		exit(1);
-	}
+	// if (!checksum_packet(icp_reply)) {
+	// 	printf("(BAD CHECKSUM)");
+	// 	exit(1);
+	// }
 	if (icp_reply->type == ICMP_ECHOREPLY) {
 		  // printf("%s\n", pr_addr(from, sizeof *from));
 		   printf("Reply of %d bytes received ", cc);
@@ -118,6 +121,12 @@ int pinger(char *str )
 	} else {
 		printf("Not a ICMP_ECHOREPLY\n");
 	}
+
+
+		print_ligne_intermediaire();
+
+
+
 	free(packet_buffer);
 	freeaddrinfo(result);
 	printf("size%lu" , sizeof( socklen_t) * 8);

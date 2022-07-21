@@ -51,12 +51,16 @@ struct timeval 	get_time_diff(struct timeval start, struct timeval end);
 
 uint16_t checksum_packet(struct icmphdr *icp);
 
+void		print_ligne_intermediaire();;
 void init_icp_header(struct icmphdr *icp);
 #define PORT_NO 		0
 #define MAXIPLEN  		60
 #define MAXICMPLEN 		76
 #define PING_PKT_S 		64
 #define RECV_TIMEOUT 	1
+
+
+#define __null 0
  //struct timeval trucc;
 #endif
 // # define CLOCK_MONOTONIC                1
