@@ -43,12 +43,6 @@ uint16_t checksum_packet(struct icmphdr *icp)
 }
 
 
-
-
-#include <sys/uio.h>
-#include <sys/socket.h>
-
-
 /*
  * Checksum routine for ICMP packets.
  * */
@@ -76,6 +70,18 @@ void init_stats(int argc , char **argv)
 
 }
 
+void init_struct(int argc , char ** argv )
+{
+(void)	argv; 
+(void)	argc;
+	stats.arg = argv[1];
+	stats.ip = hostname_to_ipv6(argv[1]);
+	stats. hostname = ipv4_to_hostname(stats.ip);
+	printf("INIT STATS[%s]  [%s] \n\n" , stats.ip, ipv4_to_hostname(stats.ip));
+}
+
+
+
 void  print_ligne_intermediaire(void)
 {
 	suseconds_t diff =  (stats.timediff.recieved.tv_usec-  stats.timediff.sent.tv_usec)  /10;
@@ -87,7 +93,14 @@ void  print_ligne_intermediaire(void)
 int main(int argc , char **argv)
 {
 	signal(SIGINT, handle_sigint);
-	init_stats(argc,  argv);
+//	init_stats(argc,  argv);make re
+	init_struct(argc , argv );
+
+// only_one_valid_place(argc ,argv);
+
+
+
+
 	printf( "IP = [%s]" , stats.ip );
 	if(stats.ip)
 	while(1)

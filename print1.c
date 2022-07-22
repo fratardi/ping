@@ -16,17 +16,17 @@ struct timeval get_time_diff(struct timeval start, struct timeval end)
 }
 
 /// function that fills the icmpheader icp given as parameter for the ping packet
-void fill_icmp_header(struct icmphdr *icp)
-{
-    icp->type = ICMP_ECHO;
-    icp->code = 0;
-    icp->checksum = 0;
-    icp->un.echo.id = htons(getpid());
-    icp->un.echo.id = htons(getpid());
-    //// needs checksum filled 
+// void fill_icmp_header(struct icmphdr *icp)
+// {
+//     icp->type = ICMP_ECHO;
+//     icp->code = 0;
+//     icp->checksum = 0;
+//     icp->un.echo.id = htons(getpid());
+//     icp->un.echo.id = htons(getpid());
+//     //// needs checksum filled 
 
-	checksum_packet(icp);
-}
+// 	checksum_packet(icp);
+// }
 
 
 void init_icp_header(struct icmphdr *icp)
@@ -104,11 +104,10 @@ hints.ai_family = AF_INET;
 
 
 
-    stats.from = ipv4_to_hostname(ip);
+    stats.hostname = ipv4_to_hostname(ip);
     freeaddrinfo(servinfo);
     return strdup(ip);
 }
-
 
 
 
@@ -145,5 +144,5 @@ void init_ping( char  **argv )
     }   
 
 
-    stats.from = ipv4_to_hostname(argv[1]);
+    stats.hostname = ipv4_to_hostname(argv[1]);
 }

@@ -15,7 +15,7 @@ extern struct s_stats stats;
 int set_ttl(int sock, int n)
 {
 	int ret;
-	ret = setsockopt(sock, IPPROTO_IP, IP_TTL, &n, sizeof(n));
+	ret = setsockopt(sock, IPPROTO_ICMP	, IP_TTL, &n, sizeof(n));
 	if (ret == -1)
 		perror("setsockopt");
 	return ret;
@@ -82,30 +82,22 @@ int hostname_to_ip6(char *hostname, struct in6_addr *addr)
 	return 0;
 }
 
-
-
-
-
-
 int pinger(char *str )
 {
 
-	printf("dom == [%s]", stats.from);
+	printf("dom == [%s]", stats.hostname);
 
 
-	int 	error;
+	//int 	error;
 	int 	sock = 0 ;
 	int		alen = 0;
 	int 	datalen = 56;
-
-
-
 	int 	i = 0 ;
 	
 	int 	packlen = datalen + MAXIPLEN + MAXICMPLEN;
 
 	unsigned char *packet_buffer = NULL;
-	char addrbuf[INET6_ADDRSTRLEN];
+	char addrbuf    [INET6_ADDRSTRLEN] ; //message you want to send in ? 
 	char hostname[NI_MAXHOST];
 	
 	struct icmphdr *icp_reply = NULL;
@@ -114,6 +106,12 @@ int pinger(char *str )
 
 	struct addrinfo* result = NULL;
 	struct addrinfo* res;
+
+
+
+
+// struct sockaddr_in6 *sin6 = null;//
+// 	sin6->sin6_family = AF_INET6;
 
 	struct sockaddr_in source ;
 	struct sockaddr_in dst  ;
@@ -129,25 +127,36 @@ int pinger(char *str )
 	memset((char *)&iov,  0,sizeof(	struct iovec));
 	memset(&msg, 0 ,sizeof(struct msghdr));
 
+
+/// fits all the data about the host in the result struct
 	getaddrinfo(str, NULL, NULL, &result);	
+
+
+
 	res = result;
-	error = getnameinfo(res->ai_addr, res->ai_addrlen, hostname, NI_MAXHOST, NULL, 0, 0); 
+
+/// get info about the host 
+//	error = getnameinfo(res->ai_addr, res->ai_addrlen, hostname, NI_MAXHOST, NULL, 0, 0); 
+	printf("hostname: %s\n res->ai_addr\n", hostname);
+
+
 	if (inet_aton(str, &dst.sin_addr) == 0) {
 		fprintf(stderr, "The first argument must be an IP address\n");
 		exit(1);
 	}
 	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
-
+printf("1\n");
 
 	if (sock == -1) {
 		perror("Error creating socket");
 	}
-	if (getsockname(sock, (struct sockaddr*)&source, (unsigned int *)&alen) == -1) {
+	if (getsockname(sock, (struct sockaddr*)&source, (unsigned int *)&alen) == -1) 
+	{
 			perror("getsockname");
 			exit(2);
+	}
 
-
-	if (!(packet_buffer = (unsigned char *)malloc((unsigned int)packlen))) {
+		if (!(packet_buffer = (unsigned char *)malloc((unsigned int)packlen))) {
 		fprintf(stderr, "ping: out of memory.\n");
 		exit(2);
 	}
@@ -155,13 +164,16 @@ int pinger(char *str )
 	init_icp_header(icp);
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
-
-	set_ttl(sock , 12);
-
+	set_ttl(sock ,255);
 	//sizetosend(packlen);
-	
+	size_t  mch  =   sendto(sock, icp, cc, 0, (struct sockaddr*)&dst, sizeof(dst));
 
-	sendto(sock, icp, cc, 0, (struct sockaddr*)&dst, sizeof(dst));
+
+
+	printf("mch == %zu   cc  == %d \n", mch, cc);
+
+
+
 	printf("Sent %d bytes", i);
 	memset(&msg, 0, sizeof(msg));
 	msg.msg_name = addrbuf;
@@ -172,8 +184,23 @@ int pinger(char *str )
 	msg.msg_iovlen = 1;
 
 	cc = recvmsg(sock, &msg, MSG_WAITALL);
+
+
+	printf("  \n\n%x\n",  msg.msg_flags );
+
+
+
+
 	gettimeofday(&stats.timediff.recieved,NULL);
 	printf(" message.namelen = [%u]\n", msg.msg_namelen);
+
+
+printf ("%d\n", msg.msg_namelen);
+write( 1, &msg.msg_name ,msg.msg_namelen );  
+write( 1, "\n" ,1 );
+printf ("%zu\n", msg.msg_controllen);
+write( 1, &msg.msg_control ,msg.msg_controllen );
+write( 1, "\n" ,1 );
 	if (cc  < 0 ){
 		perror("Error in recvmsg");
 		exit(1);
@@ -184,6 +211,11 @@ int pinger(char *str )
 	// 	printf("(BAD CHECKSUM)");
 	// 	exit(1);
 	// }
+
+	printf(  "   replycode = %d" ,  icp_reply->code   );
+
+
+
 	if (icp_reply->type == ICMP_ECHOREPLY) {
 		  // printf("%s\n", pr_addr(from, sizeof *from));
 		   printf("Reply of %d bytes received ", cc);
@@ -195,12 +227,12 @@ int pinger(char *str )
 
 		print_ligne_intermediaire();
 
-	}
+	
 
-	print_sockaddr_in(&source);
+	// print_sockaddr_in(&source);
 		
 
-	print_sockaddr_in(&dst);
+	// print_sockaddr_in(&dst);
 
 
 

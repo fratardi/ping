@@ -13,6 +13,8 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <sys/uio.h>
+#include <sys/socket.h>
 
 #ifndef PINH_H
 #define PING_H
@@ -26,10 +28,43 @@ struct 		s_timediff	{
 }			t_timediff;
 
 
+
+typedef
+struct s_packet_infos{
+
+	struct 	icmphdr		icmp_header;
+	struct 	sockaddr_in	dest_addr;
+	struct 	sockaddr_in	src_addr;
+	struct 	sockaddr_in	from_addr;
+	size_t packet_size;
+	char ttl;
+
+	struct msghdr msg;
+	struct iovec iov;
+
+	struct in6_addr *addrv6;
+	struct in_addr 	*addrv4;
+	struct icmphdr *buf;
+	struct sockaddr_in source ;
+	struct sockaddr_in dst  ;
+}			t_packet_infos;
+
+
+// grosse valise globale
+
 typedef
 struct s_stats{
-	char * ip;
-	char * from;
+	struct addrinfo* hostinfo;
+
+
+/// utils 
+	int fd ; 
+
+/// packet infos
+	struct s_packet_infos packet_infos;
+	char 	* arg ;
+	char 	* ip;	
+	char 	* hostname;
 	unsigned int        total_packets;
 	unsigned int		success;
 	unsigned int		failed;
@@ -49,7 +84,9 @@ void 			print_stats();
 void 			init_ping();
 char 			*hostname_to_ipv6(char *hostname);
 struct timeval 	get_time_diff(struct timeval start, struct timeval end);
-
+char *ipv4_to_hostname(char *ipv4);
+unsigned  char only_one_valid_place(int argc , char** argv);
+unsigned int argvparse(int argc , char** argv);
 uint16_t checksum_packet(struct icmphdr *icp);
 
 void		print_ligne_intermediaire();;
@@ -59,6 +96,9 @@ void init_icp_header(struct icmphdr *icp);
 #define MAXICMPLEN 		76
 #define PING_PKT_S 		56
 #define RECV_TIMEOUT 	1
+#define OPTS 			"l46v"
+
+
 
 
 #define __null 0
@@ -87,6 +127,11 @@ void init_icp_header(struct icmphdr *icp);
 //     char*     ai_canonname;      /* canonical name */
 //     struct    addrinfo* ai_next; /* this struct can form a linked list */
 // };
+
+// struct sockaddr {
+// sa_family_t  sa_family  Address family. 
+// char         sa_data[]  Socket address (variable-length data)
+//};
 
 
 // struct in6_addr
@@ -166,3 +211,4 @@ void init_icp_header(struct icmphdr *icp);
 // #define IP_DEFAULT_MULTICAST_TTL   1    /* normally limit m'casts to 1 hop  */
 // #define IP_DEFAULT_MULTICAST_LOOP  1    /* normally hear sends if a member  */
 // #define IP_MAX_MEMBERSHIPS         20   /* per socket; must fit in one mbuf */
+// https://www.frameip.com/entete-icmp/

@@ -13,7 +13,7 @@ COMPILER = clang
 
 RM = /bin/rm -rf
 
-FUNCTIONS = print1.c   pinger.c #addtochain.c buffconvert.c parse_file.c \
+FUNCTIONS = print1.c   pinger.c  init_ping.c #addtochain.c buffconvert.c parse_file.c \
 			#ft_display.c ft_intarrop.c ft_solve.c
 
 SRCO = $(addprefix $(SRCDIR), $(FUNCTIONS:.c=.o)) \
