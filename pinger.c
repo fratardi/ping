@@ -82,6 +82,11 @@ int hostname_to_ip6(char *hostname, struct in6_addr *addr)
 	return 0;
 }
 
+
+
+
+
+
 int pinger(char *str )
 {
 
@@ -92,12 +97,12 @@ int pinger(char *str )
 	int 	sock = 0 ;
 	int		alen = 0;
 	int 	datalen = 56;
-	int 	i = 0 ;
+//	int 	i = 0 ;
 	
 	int 	packlen = datalen + MAXIPLEN + MAXICMPLEN;
 
 	unsigned char *packet_buffer = NULL;
-	char addrbuf    [INET6_ADDRSTRLEN] ; //message you want to send in ? 
+	char addrbuf    [INET6_ADDRSTRLEN]= "hello\0"; //message you want to send in ? 
 	char hostname[NI_MAXHOST];
 	
 	struct icmphdr *icp_reply = NULL;
@@ -145,7 +150,7 @@ int pinger(char *str )
 		exit(1);
 	}
 	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
-printf("1\n");
+	printf(" socket == %d \n", sock);
 
 	if (sock == -1) {
 		perror("Error creating socket");
@@ -161,21 +166,24 @@ printf("1\n");
 		exit(2);
 	}
     icp = (struct icmphdr *)packet_buffer;
+
 	init_icp_header(icp);
+
+
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
-	set_ttl(sock ,255);
+	set_ttl(sock ,133);
 	//sizetosend(packlen);
-	size_t  mch  =   sendto(sock, icp, cc, 0, (struct sockaddr*)&dst, sizeof(dst));
+	size_t  mch  =   sendto(sock, icp, cc, 8, (struct sockaddr*)&dst, sizeof(dst));
 
 
+	printf("sendtoret == %zu  legnth sent cc  == %d \n", mch, cc);
 
-	printf("mch == %zu   cc  == %d \n", mch, cc);
-
-
-
-	printf("Sent %d bytes", i);
 	memset(&msg, 0, sizeof(msg));
+
+	printf("addrbuff %s" , addrbuf );
+
+
 	msg.msg_name = addrbuf;
 	msg.msg_namelen = sizeof(addrbuf);
 	iov.iov_base = (char *) packet_buffer;
@@ -186,36 +194,28 @@ printf("1\n");
 	cc = recvmsg(sock, &msg, MSG_WAITALL);
 
 
-	printf("  \n\n%x\n",  msg.msg_flags );
-
-
+	printf("\n msg flag   %d     msg namelen %d   msg.msg_iov->iov_len %zu \n",  msg.msg_flags, msg.msg_namelen , msg.msg_iov->iov_len);
 
 
 	gettimeofday(&stats.timediff.recieved,NULL);
-	printf(" message.namelen = [%u]\n", msg.msg_namelen);
 
 
-printf ("%d\n", msg.msg_namelen);
-write( 1, &msg.msg_name ,msg.msg_namelen );  
-write( 1, "\n" ,1 );
-printf ("%zu\n", msg.msg_controllen);
-write( 1, &msg.msg_control ,msg.msg_controllen );
-write( 1, "\n" ,1 );
+
 	if (cc  < 0 ){
 		perror("Error in recvmsg");
 		exit(1);
 	}
 	buf = msg.msg_iov->iov_base;
 	icp_reply = (struct icmphdr *)buf;
+printf("\n	RETURN  CODE OK > %d <   TYPE >%d < \n ", icp_reply->code, icp_reply->type);
+printf("	MSG	CODE OK > %d <   TYPE >%s < \n ", msg.msg_flags, (char *)msg.msg_control);
+
+
+
 	// if (!checksum_packet(icp_reply)) {
 	// 	printf("(BAD CHECKSUM)");
 	// 	exit(1);
 	// }
-
-	printf(  "   replycode = %d" ,  icp_reply->code   );
-
-
-
 	if (icp_reply->type == ICMP_ECHOREPLY) {
 		  // printf("%s\n", pr_addr(from, sizeof *from));
 		   printf("Reply of %d bytes received ", cc);
@@ -224,20 +224,7 @@ write( 1, "\n" ,1 );
 		printf("Not a ICMP_ECHOREPLY\n");
 	}
 
-
+	close(sock);
 		print_ligne_intermediaire();
-
-	
-
-	// print_sockaddr_in(&source);
-		
-
-	// print_sockaddr_in(&dst);
-
-
-
-	free(packet_buffer);
-	freeaddrinfo(result);
-	printf("size%lu" , sizeof( socklen_t) * 8);
-	return 0;
+		return(1);
 }

@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul 22 03:02:47 2022
+# Make data base, printed on Sat Jul 23 01:27:40 2022
 
 # Variables
 
@@ -51,7 +51,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/bin/code
 # environment
-JOURNAL_STREAM = 9:4368368
+JOURNAL_STREAM = 9:181962
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -71,17 +71,17 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/31706/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 870272
+MANAGERPID = 32337
 # environment
 NVM_PATH = /mnt/nfs/homes/fratardi/.nvm/versions/node/v10.19.0/lib/node
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/31706/vscode-ipc-35868ea7-4258-4bcb-bd0d-b480c10b0eb2.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/31706/vscode-ipc-98376bd6-1883-453a-924e-8f44ba212bc2.sock
 # environment
 VSCODE_CWD = /mnt/nfs/homes/fratardi/ping
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session20
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session3
 # environment
-KRB5CCNAME = FILE:/tmp/krb5cc_31706_CcNTcU
+KRB5CCNAME = FILE:/tmp/krb5cc_31706_G8V0QE
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -89,7 +89,7 @@ PATH = /mnt/nfs/homes/fratardi/.nvm/versions/node/v10.19.0/bin:/mnt/nfs/homes/fr
 # environment
 GPG_AGENT_INFO = /run/user/31706/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/e1r7p2.clusters.42paris.fr:@/tmp/.ICE-unix/870781,unix/e1r7p2.clusters.42paris.fr:/tmp/.ICE-unix/870781
+SESSION_MANAGER = local/e1r12p23.clusters.42paris.fr:@/tmp/.ICE-unix/32850,unix/e1r12p23.clusters.42paris.fr:/tmp/.ICE-unix/32850
 # environment
 XDG_RUNTIME_DIR = /run/user/31706
 # environment
@@ -101,7 +101,7 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 8fc38468bb704d7f883ca69f1149b6c6
+INVOCATION_ID = 68576551970f4574ade82f51c20d3788
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -111,7 +111,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/31706/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 871151
+GIO_LAUNCHED_DESKTOP_FILE_PID = 33222
 # automatic
 %F = $(notdir $%)
 # environment
@@ -125,7 +125,7 @@ PWD = /mnt/nfs/homes/fratardi/ping
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 870745
+SSH_AGENT_PID = 32809
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -257,9 +257,9 @@ TERMINATOR_DBUS_NAME = net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873
 # environment
 DOCKER_HOST = unix:///run/user/31706/docker.sock
 # environment
-VSCODE_PID = 876800
+VSCODE_PID = 38847
 # environment
-TERMINATOR_UUID = urn:uuid:b1a3325d-f8e8-4293-8b05-e5bdf2f7f167
+TERMINATOR_UUID = urn:uuid:738e8a32-a924-4f9a-98fb-0d34f4a9fad6
 # variable set hash-table stats:
 # Load=125/1024=12%, Rehash=0, Collisions=31/163=19%
 
@@ -269,7 +269,7 @@ TERMINATOR_UUID = urn:uuid:b1a3325d-f8e8-4293-8b05-e5bdf2f7f167
 
 # Directories
 
-# . (device 59, inode 197756409): 17 files, no impossibilities.
+# . (device 56, inode 197756409): 17 files, no impossibilities.
 
 # 17 files, no impossibilities in 1 directories.
 
@@ -279,11 +279,11 @@ TERMINATOR_UUID = urn:uuid:b1a3325d-f8e8-4293-8b05-e5bdf2f7f167
 #  recipe to execute (from 'Makefile', line 25):
 	$(COMPILER) $(FLAGS) -o $@ -c $<
 
+ 
 # 1 implicit rules, 0 (0.0%) terminal.
 
 # Files
 
- 
 all: ping
 #  Command line target.
 #  Implicit rule search has been done.
@@ -303,16 +303,34 @@ Makefile:
 # Not a target:
 ping.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 03:00:36.760572492
+#  Last modified 2022-07-22 06:02:21.620390951
 #  File has been updated.
 #  Successfully updated.
 
 pinger.o: pinger.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'pinger'
-#  Last modified 2022-07-22 03:02:18.842478176
+#  Last modified 2022-07-22 07:34:07.785821578
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := pinger.o
+# automatic
+# % := 
+# automatic
+# * := pinger
+# automatic
+# + := pinger.c ping.h
+# automatic
+# | := 
+# automatic
+# < := pinger.c
+# automatic
+# ^ := pinger.c ping.h
+# automatic
+# ? := pinger.c
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/15=7%
 #  recipe to execute (from 'Makefile', line 25):
 	$(COMPILER) $(FLAGS) -o $@ -c $<
 
@@ -327,38 +345,17 @@ fclean: clean
 print1.o: print1.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'print1'
-#  Last modified 2022-07-22 03:02:18.75247826
+#  Last modified 2022-07-22 07:34:07.673821687
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
 	$(COMPILER) $(FLAGS) -o $@ -c $<
 
-init_ping.o: init_ping.c ping.h
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: 'init_ping'
-#  Last modified 2022-07-21 05:27:07.452773766
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# automatic
-# @ := init_ping.o
-# automatic
-# % := 
-# automatic
-# * := init_ping
-# automatic
-# + := init_ping.c ping.h
-# automatic
-# | := 
-# automatic
-# < := init_ping.c
-# automatic
-# ^ := init_ping.c ping.h
-# automatic
-# ? := init_ping.c ping.h
-# variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=1/15=7%
-#  recipe to execute (from 'Makefile', line 25):
-	$(COMPILER) $(FLAGS) -o $@ -c $<
+# Not a target:
+init_ping.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 .DEFAULT:
@@ -389,20 +386,20 @@ dbg: ping
 # Not a target:
 pinger.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 02:47:02.691324653
+#  Last modified 2022-07-23 01:27:40.293800589
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 print1.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-21 07:54:14.107238681
+#  Last modified 2022-07-22 07:34:03.150826069
 #  File has been updated.
 #  Successfully updated.
 
 ping: print1.o pinger.o init_ping.o ping.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-22 03:02:19.069477967
+#  Last modified 2022-07-22 07:34:08.076821296
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -416,27 +413,20 @@ ping.o:
 #  Modification time never checked.
 #  File has not been updated.
 
-# Not a target:
-init_ping.c:
-#  Implicit rule search has been done.
-#  Last modified 2022-07-22 03:01:38.588515368
-#  File has been updated.
-#  Successfully updated.
-
 # files hash-table stats:
-# Load=17/1024=2%, Rehash=0, Collisions=0/53=0%
+# Load=16/1024=2%, Rehash=0, Collisions=0/47=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 31 / storage = 236 B / avg = 7 B
-# current buf: size = 8162 B / used = 236 B / count = 31 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 30 / storage = 226 B / avg = 7 B
+# current buf: size = 8162 B / used = 226 B / count = 30 / avg = 7 B
 
-# strcache performance: lookups = 65 / hit rate = 52%
+# strcache performance: lookups = 60 / hit rate = 50%
 # hash-table stats:
-# Load=31/8192=0%, Rehash=0, Collisions=1/65=2%
-# Finished Make data base on Fri Jul 22 03:02:47 2022
+# Load=30/8192=0%, Rehash=0, Collisions=1/60=2%
+# Finished Make data base on Sat Jul 23 01:27:40 2022
 
  

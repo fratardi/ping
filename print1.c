@@ -144,5 +144,5 @@ void init_ping( char  **argv )
     }   
 
 
-    stats.hostname = ipv4_to_hostname(argv[1]);
+  //  stats.hostinfo = ipv4_to_hostname(argv[1]);
 }

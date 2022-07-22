@@ -43,6 +43,10 @@ uint16_t checksum_packet(struct icmphdr *icp)
 }
 
 
+
+
+
+
 /*
  * Checksum routine for ICMP packets.
  * */
