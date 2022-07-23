@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
         "*.c": "c",
-        "ping.h": "c"
+        "ping.h": "c",
+        "types.h": "c"
     }
 }

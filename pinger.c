@@ -44,16 +44,50 @@ void print_sockaddr_in6(struct sockaddr_in6 *addr)
 
 	printf("sin6_port: %d\n", addr->sin6_port);
 	printf("sin6_flowinfo: %d\n", addr->sin6_flowinfo);
-	print_in6_addr(&addr->sin6_addr);
+//	print_in6_addr(&addr->sin6_addr);
 	printf("sin6_scope_id: %d\n", addr->sin6_scope_id);
 }
 
 // print icmp struct
 void print_icmp(struct icmp *icmp)
 {
-	printf("icmp_type: %d\n", icmp->icmp_type);
-	printf("icmp_code: %d\n", icmp->icmp_code);
-	printf("icmp_cksum: %d\n", icmp->icmp_cksum);
+
+
+	ICMP_INFOTYPE(icmp->icmp_type);
+
+	printf("\n=====================\nREPLY\n    %d " , 	ICMP_INFOTYPE(icmp->icmp_type));
+	printf("icmp_type: %hhd   \n", icmp->icmp_type   );
+	printf("icmp_code: %hu\n", icmp->icmp_code);
+	printf("icmp_cksum: %hu\n", icmp->icmp_cksum);
+
+	printf("icmp->icmp_hun.ih_pptr: %d\n", icmp->icmp_hun.ih_pptr);
+	printf("icmp->icmp_hun.ih_gwaddr.s_addr: %d\n"  , icmp->icmp_hun.ih_gwaddr.s_addr);
+
+	printf("icmp->icmp_hun.ih_idseq.icd_id: %d\n"  , icmp->icmp_hun.ih_idseq.icd_id);
+	printf("icmp->icmp_hun.ih_idseq.icd_seq: %d\n"  , icmp->icmp_hun.ih_idseq.icd_seq);
+
+	printf("icmp->icmp_hun.ih_void : %d\n"  , icmp->icmp_hun.ih_void);
+
+	printf("icmp->icmp_hun.ih_pmtu.ipm_void: %d\n"  , icmp->icmp_hun.ih_pmtu.ipm_void);
+	printf("icmp->icmp_hun.ih_pmtu.nextmtu: %d\n"  ,icmp->icmp_hun.ih_pmtu.ipm_nextmtu);
+
+	printf("icmp->icmp_hun.ih_rtradv.irt_num_addrs: %d\n"  , icmp->icmp_hun.ih_rtradv.irt_num_addrs);
+	printf("icmp->icmp_hun.ih_rtradv.irt_wpa: %d\n"  , icmp->icmp_hun.ih_rtradv.irt_wpa);
+	printf("icmp->icmp_hun.ih_rtradv.irt_lifetime: %d\n"  , icmp->icmp_hun.ih_rtradv.irt_lifetime);
+
+
+
+	printf("icmp->icmp_dun.id_ts.its_otime: %u\n"  , icmp->icmp_dun.id_ts.its_otime);
+	printf("icmp->icmp_dun.id_ts.its_rtime: %u\n"  , icmp->icmp_dun.id_ts.its_rtime);
+	printf("icmp->icmp_dun.id_ts.its_ttime: %u\n"  , icmp->icmp_dun.id_ts.its_ttime);
+
+ //printf("icmp->icmp_dun: %u\n"  , icmp_lifetime);
+
+
+
+
+
+//icmp->icmp_hun.ih_gwaddr.s_addr;
 	printf("icmp_id: %d\n", icmp->icmp_id);
 	printf("icmp_seq: %d\n", icmp->icmp_seq);
 }
@@ -82,20 +116,6 @@ int hostname_to_ip6(char *hostname, struct in6_addr *addr)
 	return 0;
 }
 
-
-
-
-// function that sends ICMP packet to given address
-// int send_icmp(int sock, struct sockaddr *addr, int addr_len)
-// {
-// 	int ret;
-// 	ret = sendto(sock, &stats.icmp, sizeof(stats.icmp), 0, addr, addr_len);
-// 	if (ret == -1)
-// 		perror("sendto");
-// 	return ret;
-// }
-
-
 int open_icmp_socket()
 {
 	int sock;
@@ -104,29 +124,6 @@ int open_icmp_socket()
 		perror("socket");
 	return sock;
 }
-
-// send ping reguest to specific socket
-// int send_icmp(int sock, struct sockaddr *addr, int addr_len)
-// {
-// 	int ret;
-// 	ret = sendto(sock, &stats.icmp, sizeof(stats.icmp), 0, addr, addr_len);
-// 	if (ret == -1)
-// 		perror("sendto");
-// 	return ret;
-// }
-
-
-// // init icmp header
-// void init_icmp(struct icmp *icmp)
-// {
-// 	icmp->icmp_type = ICMP_ECHO;
-// 	icmp->icmp_code = 0;
-// 	icmp->icmp_id = htons(stats.icmp_id);
-// 	icmp->icmp_seq = htons(stats.icmp_seq);
-// 	icmp->icmp_cksum = 0;
-// 	icmp->icmp_cksum = checksum((unsigned short *)icmp, sizeof(struct icmp));
-// }
-
 
 
 
@@ -147,6 +144,7 @@ int listen_icmp(int sock)
 		printf("officially received %d bytes\n", ret);
 		print_sockaddr_in6(&addr);
 		print_icmp((struct icmp *)buf);
+
 	}
 
 	if (ret == -1)
@@ -158,19 +156,12 @@ int listen_icmp(int sock)
 int pinger(char *str )
 {
 
-	printf("dom == [%s]", stats.hostname);
 
-
-	//int 	error;
 	int 	sock = 0 ;
 	int		alen = 0;
-	int 	datalen = 545;
-//	int 	i = 0 ;
-	
-	int 	packlen = datalen + MAXIPLEN + MAXICMPLEN;
 
 	unsigned char *packet_buffer = NULL;
-	char addrbuf    [INET6_ADDRSTRLEN]= "hellllllllllo\0"; //message you want to send in ? 
+	char addrbuf    [INET6_ADDRSTRLEN]= "hellllllllllomy name is rebecca\0"; //message you want to send in ? 
 	char hostname[NI_MAXHOST];
 	struct icmphdr *icp_reply = NULL;
 	struct icmphdr *buf = NULL;
@@ -179,7 +170,8 @@ int pinger(char *str )
 	struct addrinfo* res;
 	struct sockaddr_in source ;
 	struct sockaddr_in dst  ;
-
+size_t	datalen = strlen(addrbuf);
+	int 	packlen = datalen + sizeof(struct icmphdr);
 	memset((char *)&dst, 	0, 		sizeof(dst));
 	memset((char *)&source, 0,	 	sizeof(source));
 	source 	.sin_family = AF_INET ;
@@ -231,7 +223,7 @@ int pinger(char *str )
 
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
-	set_ttl(sock ,154);
+	//set_ttl(sock ,29);
 	size_t  mch  =   sendto(sock, icp, cc, 8, (struct sockaddr*)&dst, sizeof(dst));
 
 	
@@ -258,7 +250,7 @@ int pinger(char *str )
 	msg.msg_iov = &iov;
 	msg.msg_iovlen = 1;
 
-//	cc = recvmsg(sock, &msg, MSG_WAITALL);
+	//cc = recvmsg(sock, &msg, MSG_WAITALL);
 
 
 	printf("\n msg flag   %d     msg namelen %d   msg.msg_iov->iov_len %zu \n",  msg.msg_flags, msg.msg_namelen , msg.msg_iov->iov_len);
@@ -276,10 +268,6 @@ int pinger(char *str )
 	 buf = msg.msg_iov->iov_base;
 	 icp_reply = (struct icmphdr *)buf;
 
-
-
-
-	 
 // printf("\n	RETURN  CODE OK > %d <   TYPE >%d < \n ", icp_reply->code, icp_reply->type);
 // printf("	MSG	CODE OK > %d <   TYPE >%s < \n ", msg.msg_flags, (char *)msg.msg_control);
 
@@ -296,10 +284,7 @@ int pinger(char *str )
 	} else {
 		printf("Not a ICMP_ECHOREPLY\n");
 	}
-
-
-
-		close(sock);
-		print_ligne_intermediaire();
+	close(sock);
+	print_ligne_intermediaire();
 		return(1);
 }
