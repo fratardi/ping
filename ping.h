@@ -99,9 +99,6 @@ void init_icp_header(struct icmphdr *icp);
 #define RECV_TIMEOUT 	1
 #define OPTS 			"l46v"
 
-
-
-
 #define __null 0
  //struct timeval trucc;
 #endif
@@ -213,3 +210,4 @@ void init_icp_header(struct icmphdr *icp);
 // #define IP_DEFAULT_MULTICAST_LOOP  1    /* normally hear sends if a member  */
 // #define IP_MAX_MEMBERSHIPS         20   /* per socket; must fit in one mbuf */
 // https://www.frameip.com/entete-icmp/
+// https://inetdoc.developpez.com/tutoriels/filtrage-iptables/?page=page_3

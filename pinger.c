@@ -21,17 +21,17 @@ int set_ttl(int sock, int n)
 	return ret;
 }
 
-int get_sock_ttl(int socket)
-{
+// int get_sock_ttl(int socket)
+// {
 
 	
-		int ret;
-	ret = getsockopt(socket, IPPROTO_ICMP	,  6, 0, 0);
-	if (ret == -1)
-		perror("getsockopt");
-	return ret;
+// 		int ret;
+// 	ret = getsockopt(socket, IPPROTO_ICMP	,  6, 0, 0);
+// 	if (ret == -1)
+// 		perror("getsockopt");
+// 	return ret;
 
-}
+// }
 
 
 
@@ -62,6 +62,18 @@ void print_sockaddr_in6(struct sockaddr_in6 *addr)
 	printf("sin6_scope_id: %d\n", addr->sin6_scope_id);
 }
 
+
+// returns the checksum of a icmp header
+unsigned short checksum(unsigned short *buf, int nwords)
+{
+	unsigned long sum;
+	for (sum = 0; nwords > 0; nwords--)
+		sum += *buf++;
+	sum = (sum >> 16) + (sum & 0xffff);
+	sum += (sum >> 16);
+	return (unsigned short)(~sum);
+}
+
 // print icmp struct
 void print_icmp(struct icmp *icmp)
 {
@@ -72,6 +84,13 @@ void print_icmp(struct icmp *icmp)
 	printf("\n=====================\nREPLY\nICMP_INFOTYPE%d " , 	ICMP_INFOTYPE(icmp->icmp_type));
 	printf("icmp_type: %hhd   \n", icmp->icmp_type   );
 	printf("icmp_code: %hu\n", icmp->icmp_code);
+
+
+
+
+
+
+	printf("REALSUM %hu\n", checksum((unsigned short *)icmp,39 + 8));
 	printf("icmp_cksum: %hu\n", icmp->icmp_cksum);
 
 	printf("icmp->icmp_pptr: %d\n", icmp->icmp_pptr);
@@ -221,28 +240,20 @@ int pinger(char *str )
 	int		alen = 0;
 
 	unsigned char *packet_buffer = NULL;
-	char addrbuf    [INET6_ADDRSTRLEN] ;//= "hellllllllllomy name is rebecca\0"; //message you want to send in ? 
+	char addrbuf    [INET6_ADDRSTRLEN] = "hellllllllllomy name is rebecca\0"; //message you want to send in ? 
 	char hostname[NI_MAXHOST];
-	struct icmphdr *icp_reply = NULL;
-	struct icmphdr *buf = NULL;
 	struct icmphdr *icp = NULL;
 	struct addrinfo* result = NULL;
 	struct addrinfo* res;
 	struct sockaddr_in source ;
 	struct sockaddr_in dst  ;
-size_t	datalen = strlen(addrbuf);
+	size_t	datalen = strlen(addrbuf);
 	int 	packlen = datalen + sizeof(struct icmphdr);
-	memset((char *)&dst, 	0, 		sizeof(dst));
-	memset((char *)&source, 0,	 	sizeof(source));
 	source 	.sin_family = AF_INET ;
 	dst		.sin_family = AF_INET;
 	dst		.sin_port 	= htons(NI_MAXHOST);
 
-	struct msghdr msg;
-	struct iovec iov;
 
-	memset((char *)&iov,  0,sizeof(	struct iovec));
-	memset(&msg, 0 ,sizeof(struct msghdr));
 
 /// fits all the data about the host in the result struct
 	getaddrinfo(str, NULL, NULL, &result);	
@@ -283,13 +294,29 @@ size_t	datalen = strlen(addrbuf);
 
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
-	set_ttl(sock ,29);
+	//set_ttl(sock ,29);
 
 
-	printf( "TTL  = %d "   , get_sock_ttl(sock));
+int ttl = 32; /* max = 255 */
+
+ struct timeval tv_out;
+    tv_out.tv_sec = RECV_TIMEOUT;
+    tv_out.tv_usec = 0;
+
+ printf("setsockopt [%d]\n ",   setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO,
+                   (const char*)&tv_out, sizeof tv_out));
+
+printf("setsockopt [%d]\n " , setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl)));
+
+	//printf( "TTL  = %d "   , get_sock_ttl(sock));
 
 
 	size_t  mch  =   sendto(sock, icp, cc, 8, (struct sockaddr*)&dst, sizeof(dst));
+	if(!mch)
+	{
+		perror("sendto");
+		exit(2);
+	}
 
 
 	
@@ -302,52 +329,11 @@ size_t	datalen = strlen(addrbuf);
 
 	printf("sendtoret == %zu  legnth sent cc  == %d \n", mch, cc);
 
-	memset(&msg, 0, sizeof(msg));
-
 	printf("addrbuff %s" , addrbuf );
-
-
-	msg.msg_name = addrbuf;
-	msg.msg_namelen = sizeof(addrbuf);
-	iov.iov_base = (char *) packet_buffer;
-	iov.iov_len = packlen;
-	msg.msg_iov = &iov;
-	msg.msg_iovlen = 1;
-
-	//cc = recvmsg(sock, &msg, MSG_WAITALL);
-
-
-	printf("\n msg flag   %d     msg namelen %d   msg.msg_iov->iov_len %zu \n",  msg.msg_flags, msg.msg_namelen , msg.msg_iov->iov_len);
 
 
 	gettimeofday(&stats.timediff.recieved,NULL);
 
-
-
-	if (cc  < 0 ){
-		perror("Error in recvmsg");
-		exit(1);
-	}
-
-	 buf = msg.msg_iov->iov_base;
-	 icp_reply = (struct icmphdr *)buf;
-
-// printf("\n	RETURN  CODE OK > %d <   TYPE >%d < \n ", icp_reply->code, icp_reply->type);
-// printf("	MSG	CODE OK > %d <   TYPE >%s < \n ", msg.msg_flags, (char *)msg.msg_control);
-
-
-
-	// if (!checksum_packet(icp_reply)) {
-	// 	printf("(BAD CHECKSUM)");
-	// 	exit(1);
-	// }
-	if (icp_reply->type == ICMP_ECHOREPLY) {
-		  // printf("%s\n", pr_addr(from, sizeof *from));
-		   printf("Reply of %d bytes received ", cc);
-		   printf("icmp_seq = %u\n", ntohs(icp_reply->un.echo.sequence));
-	} else {
-		printf("Not a ICMP_ECHOREPLY\n");
-	}
 	close(sock);
 	print_ligne_intermediaire();
 		return(1);
