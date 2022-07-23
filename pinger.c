@@ -21,6 +21,20 @@ int set_ttl(int sock, int n)
 	return ret;
 }
 
+int get_sock_ttl(int socket)
+{
+
+	
+		int ret;
+	ret = getsockopt(socket, IPPROTO_ICMP	,  6, 0, 0);
+	if (ret == -1)
+		perror("getsockopt");
+	return ret;
+
+}
+
+
+
 // print sockaddr_in struct	
 void print_sockaddr_in(struct sockaddr_in *addr)
 {
@@ -55,35 +69,35 @@ void print_icmp(struct icmp *icmp)
 
 	ICMP_INFOTYPE(icmp->icmp_type);
 
-	printf("\n=====================\nREPLY\n    %d " , 	ICMP_INFOTYPE(icmp->icmp_type));
+	printf("\n=====================\nREPLY\nICMP_INFOTYPE%d " , 	ICMP_INFOTYPE(icmp->icmp_type));
 	printf("icmp_type: %hhd   \n", icmp->icmp_type   );
 	printf("icmp_code: %hu\n", icmp->icmp_code);
 	printf("icmp_cksum: %hu\n", icmp->icmp_cksum);
 
-	printf("icmp->icmp_hun.ih_pptr: %d\n", icmp->icmp_hun.ih_pptr);
+	printf("icmp->icmp_pptr: %d\n", icmp->icmp_pptr);
 	printf("icmp->icmp_hun.ih_gwaddr.s_addr: %d\n"  , icmp->icmp_hun.ih_gwaddr.s_addr);
 
-	printf("icmp->icmp_hun.ih_idseq.icd_id: %d\n"  , icmp->icmp_hun.ih_idseq.icd_id);
-	printf("icmp->icmp_hun.ih_idseq.icd_seq: %d\n"  , icmp->icmp_hun.ih_idseq.icd_seq);
+	printf("icmp->icmp_id: %d\n"  , icmp->icmp_id);
+	printf("icmp->icmp_seq: %d\n"  , icmp->icmp_seq);
 
-	printf("icmp->icmp_hun.ih_void : %d\n"  , icmp->icmp_hun.ih_void);
+	printf("icmp->icmp_void : %d\n"  , icmp->icmp_void);
 
-	printf("icmp->icmp_hun.ih_pmtu.ipm_void: %d\n"  , icmp->icmp_hun.ih_pmtu.ipm_void);
-	printf("icmp->icmp_hun.ih_pmtu.nextmtu: %d\n"  ,icmp->icmp_hun.ih_pmtu.ipm_nextmtu);
+	printf("icmp->icmp_pm_void: %d\n"  , icmp->icmp_pmvoid);
+	printf("icmp->icmp_nextmtu: %d\n"  ,icmp->icmp_nextmtu);
 
-	printf("icmp->icmp_hun.ih_rtradv.irt_num_addrs: %d\n"  , icmp->icmp_hun.ih_rtradv.irt_num_addrs);
-	printf("icmp->icmp_hun.ih_rtradv.irt_wpa: %d\n"  , icmp->icmp_hun.ih_rtradv.irt_wpa);
-	printf("icmp->icmp_hun.ih_rtradv.irt_lifetime: %d\n"  , icmp->icmp_hun.ih_rtradv.irt_lifetime);
-
-
-
-	printf("icmp->icmp_dun.id_ts.its_otime: %u\n"  , icmp->icmp_dun.id_ts.its_otime);
-	printf("icmp->icmp_dun.id_ts.its_rtime: %u\n"  , icmp->icmp_dun.id_ts.its_rtime);
-	printf("icmp->icmp_dun.id_ts.its_ttime: %u\n"  , icmp->icmp_dun.id_ts.its_ttime);
-
- //printf("icmp->icmp_dun: %u\n"  , icmp_lifetime);
+	printf("icmp->icmp_num_addrs: %d\n"  , icmp->icmp_num_addrs);
+	printf("icmp->icmp_wpa: %d\n"  , icmp->icmp_wpa);
+	printf("icmp->icmp_lifetime: %d\n"  , icmp->icmp_lifetime);
 
 
+
+	printf("icmp->icmp__otime: %u\n"  , icmp->icmp_otime);
+	printf("icmp->icmp_rtime %u\n"  , icmp->icmp_rtime);
+	printf("icmp->icmp_ttime: %u\n"  , icmp->icmp_ttime);
+
+ printf("icmp->_data %s\n"  , icmp->icmp_data);
+
+printf("icmp->icmp_dun.id_data[0] %d\n" , icmp->icmp_dun.id_data[0]);
 
 
 
@@ -116,12 +130,41 @@ int hostname_to_ip6(char *hostname, struct in6_addr *addr)
 	return 0;
 }
 
+
+
+
+
+// get socketinfo
+void get_socketinfo(int sock)
+{
+
+	printf("get_socket_info\n");
+
+
+
+	struct sockaddr_in addr;
+	socklen_t addrlen = sizeof(addr);
+	int ret;
+	ret = getsockname(sock, (struct sockaddr *)&addr, &addrlen);
+	if (ret == -1)
+		perror("getsockname");
+	else
+		print_sockaddr_in(&addr);
+}
+
+
+
+
 int open_icmp_socket()
 {
 	int sock;
 	sock = socket(AF_INET,  SOCK_DGRAM, IPPROTO_ICMP);
 	if (sock == -1)
 		perror("socket");
+
+	get_socketinfo(sock);
+
+
 	return sock;
 }
 
@@ -153,6 +196,23 @@ int listen_icmp(int sock)
 }
 
 
+// get the curent ttl info of a ipv4 socket
+int get_ttl(int sock)
+{
+	int ret;
+	int ttl = -1;
+	struct sockaddr_in addr;
+	socklen_t addrlen = sizeof(addr);
+	ret = getsockname(sock, (struct sockaddr *)&addr, &addrlen);
+	if (ret == -1)
+		perror("getsockname");
+	else
+		ttl = addr.sin_addr.s_addr;
+	return ttl;
+}
+
+
+
 int pinger(char *str )
 {
 
@@ -161,7 +221,7 @@ int pinger(char *str )
 	int		alen = 0;
 
 	unsigned char *packet_buffer = NULL;
-	char addrbuf    [INET6_ADDRSTRLEN]= "hellllllllllomy name is rebecca\0"; //message you want to send in ? 
+	char addrbuf    [INET6_ADDRSTRLEN] ;//= "hellllllllllomy name is rebecca\0"; //message you want to send in ? 
 	char hostname[NI_MAXHOST];
 	struct icmphdr *icp_reply = NULL;
 	struct icmphdr *buf = NULL;
@@ -223,11 +283,15 @@ size_t	datalen = strlen(addrbuf);
 
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
-	//set_ttl(sock ,29);
+	set_ttl(sock ,29);
+
+
+	printf( "TTL  = %d "   , get_sock_ttl(sock));
+
+
 	size_t  mch  =   sendto(sock, icp, cc, 8, (struct sockaddr*)&dst, sizeof(dst));
 
-	
-	
+
 	
 	
 	

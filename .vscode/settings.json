@@ -3,6 +3,8 @@
     "files.associations": {
         "*.c": "c",
         "ping.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "socket.h": "c",
+        "features.h": "c"
     }
 }
