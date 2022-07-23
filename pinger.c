@@ -85,6 +85,74 @@ int hostname_to_ip6(char *hostname, struct in6_addr *addr)
 
 
 
+// function that sends ICMP packet to given address
+// int send_icmp(int sock, struct sockaddr *addr, int addr_len)
+// {
+// 	int ret;
+// 	ret = sendto(sock, &stats.icmp, sizeof(stats.icmp), 0, addr, addr_len);
+// 	if (ret == -1)
+// 		perror("sendto");
+// 	return ret;
+// }
+
+
+int open_icmp_socket()
+{
+	int sock;
+	sock = socket(AF_INET,  SOCK_DGRAM, IPPROTO_ICMP);
+	if (sock == -1)
+		perror("socket");
+	return sock;
+}
+
+// send ping reguest to specific socket
+// int send_icmp(int sock, struct sockaddr *addr, int addr_len)
+// {
+// 	int ret;
+// 	ret = sendto(sock, &stats.icmp, sizeof(stats.icmp), 0, addr, addr_len);
+// 	if (ret == -1)
+// 		perror("sendto");
+// 	return ret;
+// }
+
+
+// // init icmp header
+// void init_icmp(struct icmp *icmp)
+// {
+// 	icmp->icmp_type = ICMP_ECHO;
+// 	icmp->icmp_code = 0;
+// 	icmp->icmp_id = htons(stats.icmp_id);
+// 	icmp->icmp_seq = htons(stats.icmp_seq);
+// 	icmp->icmp_cksum = 0;
+// 	icmp->icmp_cksum = checksum((unsigned short *)icmp, sizeof(struct icmp));
+// }
+
+
+
+
+// function that listen on given socket for ICMP packet
+int listen_icmp(int sock)
+{
+	int ret;
+	char buf[BUFFER_SIZE];
+	struct sockaddr_in6 addr;
+	socklen_t addr_len = sizeof(addr);
+	ret = recvfrom(sock, buf, BUFFER_SIZE,  MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
+
+
+	if (ret == -1)
+		perror("recvfrom");
+	else
+	{
+		printf("officially received %d bytes\n", ret);
+		print_sockaddr_in6(&addr);
+		print_icmp((struct icmp *)buf);
+	}
+
+	if (ret == -1)
+		perror("recvfrom");
+	return ret;
+}
 
 
 int pinger(char *str )
@@ -96,30 +164,22 @@ int pinger(char *str )
 	//int 	error;
 	int 	sock = 0 ;
 	int		alen = 0;
-	int 	datalen = 56;
+	int 	datalen = 545;
 //	int 	i = 0 ;
 	
 	int 	packlen = datalen + MAXIPLEN + MAXICMPLEN;
 
 	unsigned char *packet_buffer = NULL;
-	char addrbuf    [INET6_ADDRSTRLEN]= "hello\0"; //message you want to send in ? 
+	char addrbuf    [INET6_ADDRSTRLEN]= "hellllllllllo\0"; //message you want to send in ? 
 	char hostname[NI_MAXHOST];
-	
 	struct icmphdr *icp_reply = NULL;
 	struct icmphdr *buf = NULL;
 	struct icmphdr *icp = NULL;
-
 	struct addrinfo* result = NULL;
 	struct addrinfo* res;
-
-
-
-
-// struct sockaddr_in6 *sin6 = null;//
-// 	sin6->sin6_family = AF_INET6;
-
 	struct sockaddr_in source ;
 	struct sockaddr_in dst  ;
+
 	memset((char *)&dst, 	0, 		sizeof(dst));
 	memset((char *)&source, 0,	 	sizeof(source));
 	source 	.sin_family = AF_INET ;
@@ -132,7 +192,6 @@ int pinger(char *str )
 	memset((char *)&iov,  0,sizeof(	struct iovec));
 	memset(&msg, 0 ,sizeof(struct msghdr));
 
-
 /// fits all the data about the host in the result struct
 	getaddrinfo(str, NULL, NULL, &result);	
 
@@ -142,14 +201,14 @@ int pinger(char *str )
 
 /// get info about the host 
 //	error = getnameinfo(res->ai_addr, res->ai_addrlen, hostname, NI_MAXHOST, NULL, 0, 0); 
-	printf("hostname: %s\n res->ai_addr\n", hostname);
 
+	printf("hostname: %s\n res->ai_addr\n", hostname);
 
 	if (inet_aton(str, &dst.sin_addr) == 0) {
 		fprintf(stderr, "The first argument must be an IP address\n");
 		exit(1);
 	}
-	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
+	sock = open_icmp_socket();
 	printf(" socket == %d \n", sock);
 
 	if (sock == -1) {
@@ -172,9 +231,17 @@ int pinger(char *str )
 
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
-	set_ttl(sock ,133);
-	//sizetosend(packlen);
+	set_ttl(sock ,154);
 	size_t  mch  =   sendto(sock, icp, cc, 8, (struct sockaddr*)&dst, sizeof(dst));
+
+	
+	
+	
+	
+	
+	/// wait message from the server
+	listen_icmp(sock) ;
+
 
 
 	printf("sendtoret == %zu  legnth sent cc  == %d \n", mch, cc);
@@ -191,7 +258,7 @@ int pinger(char *str )
 	msg.msg_iov = &iov;
 	msg.msg_iovlen = 1;
 
-	cc = recvmsg(sock, &msg, MSG_WAITALL);
+//	cc = recvmsg(sock, &msg, MSG_WAITALL);
 
 
 	printf("\n msg flag   %d     msg namelen %d   msg.msg_iov->iov_len %zu \n",  msg.msg_flags, msg.msg_namelen , msg.msg_iov->iov_len);
@@ -205,10 +272,16 @@ int pinger(char *str )
 		perror("Error in recvmsg");
 		exit(1);
 	}
-	buf = msg.msg_iov->iov_base;
-	icp_reply = (struct icmphdr *)buf;
-printf("\n	RETURN  CODE OK > %d <   TYPE >%d < \n ", icp_reply->code, icp_reply->type);
-printf("	MSG	CODE OK > %d <   TYPE >%s < \n ", msg.msg_flags, (char *)msg.msg_control);
+
+	 buf = msg.msg_iov->iov_base;
+	 icp_reply = (struct icmphdr *)buf;
+
+
+
+
+	 
+// printf("\n	RETURN  CODE OK > %d <   TYPE >%d < \n ", icp_reply->code, icp_reply->type);
+// printf("	MSG	CODE OK > %d <   TYPE >%s < \n ", msg.msg_flags, (char *)msg.msg_control);
 
 
 
@@ -224,7 +297,9 @@ printf("	MSG	CODE OK > %d <   TYPE >%s < \n ", msg.msg_flags, (char *)msg.msg_co
 		printf("Not a ICMP_ECHOREPLY\n");
 	}
 
-	close(sock);
+
+
+		close(sock);
 		print_ligne_intermediaire();
 		return(1);
 }

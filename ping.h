@@ -18,6 +18,7 @@
 
 #ifndef PINH_H
 #define PING_H
+#define BUFFER_SIZE 1024
 
 
 
