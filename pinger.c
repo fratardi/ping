@@ -196,15 +196,16 @@ int listen_icmp(int sock)
 	char buf[BUFFER_SIZE];
 	struct sockaddr_in6 addr;
 	socklen_t addr_len = sizeof(addr);
-	ret = recvfrom(sock, buf, BUFFER_SIZE,  MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
-
-
+	ret = recvfrom(sock, buf, BUFFER_SIZE,MSG_WAITFORONE, (struct sockaddr *)&addr, &addr_len);
+//		ret = recvfrom(sock, buf, BUFFER_SIZE,MSG_WAITFORONE, (struct sockaddr *)&addr, &addr_len);
+// MSG_WAITFORONE
+//MSG_WAITALL
 	if (ret == -1)
 		perror("recvfrom");
 	else
 	{
 		printf("officially received %d bytes\n", ret);
-		print_sockaddr_in6(&addr);
+		//print_sockaddr_in6(&addr);
 		print_icmp((struct icmp *)buf);
 
 	}
@@ -227,6 +228,9 @@ int get_ttl(int sock)
 		perror("getsockname");
 	else
 		ttl = addr.sin_addr.s_addr;
+
+
+
 	return ttl;
 }
 
@@ -262,8 +266,6 @@ int pinger(char *str )
 
 	res = result;
 
-/// get info about the host 
-//	error = getnameinfo(res->ai_addr, res->ai_addrlen, hostname, NI_MAXHOST, NULL, 0, 0); 
 
 	printf("hostname: %s\n res->ai_addr\n", hostname);
 
@@ -297,16 +299,22 @@ int pinger(char *str )
 	//set_ttl(sock ,29);
 
 
-int ttl = 32; /* max = 255 */
+// /int ttl = 12; /* max = 255 */
 
  struct timeval tv_out;
-    tv_out.tv_sec = RECV_TIMEOUT;
+    tv_out.tv_sec = 0;//RECV_TIMEOUT;
     tv_out.tv_usec = 0;
 
- printf("setsockopt [%d]\n ",   setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO,
+ printf("setsockopt [%d]\n ",   setsockopt(sock, SOL_IP, SO_RCVTIMEO,
                    (const char*)&tv_out, sizeof tv_out));
 
-printf("setsockopt [%d]\n " , setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl)));
+//printf("setsockopt [%d]\n " , 
+   int ttl = 1;		     /*	max = 255 */
+     setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
+//);
+
+
+
 
 	//printf( "TTL  = %d "   , get_sock_ttl(sock));
 
@@ -318,7 +326,7 @@ printf("setsockopt [%d]\n " , setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl)
 		exit(2);
 	}
 
-
+	printf(" TTL = %d" , get_ttl(sock));
 	
 	
 	
