@@ -75,7 +75,7 @@ void init_struct(int argc , char ** argv )
 	stats.arg = argv[1];
 	stats.ip = hostname_to_ipv6(argv[1]);
 	stats. hostname = ipv4_to_hostname(stats.ip);
-	printf("INIT STATS[%s]  [%s] \n\n" , stats.ip, ipv4_to_hostname(stats.ip));
+	printf("INIT STATS[%s]  [%s] \n\n" , stats.ip, stats.hostname);
 
 
 	
@@ -96,14 +96,7 @@ void  print_ligne_intermediaire(void)
 
 void * func(void *arg )
 {
-	int time = get_random();
-
-	printf(" sleeping %d \n", time);
-	printf("\nT1hreads are equal.\n");
-
 	pinger(stats.ip);
-	
-	printf("\nT2hreads are equal\n");
 	return(NULL);
 }
 
@@ -116,8 +109,10 @@ void send_ping(void)
 
 		printf( "\npthreadcreate == %d \n " , 	
 	 	pthread_create(&ptid, NULL, &func, NULL) );
+	//	pthread_detach(&ptid);
+	//	pthread_cancel(&ptid);
 printf("\n PRTID ==  %lu\n" , ptid);
-	//	pthread_exit(NULL);
+//		pthread_exit(NULL);
 
 }
 

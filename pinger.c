@@ -286,6 +286,8 @@ int pinger(char *str )
 		fprintf(stderr, "ping: out of memory.\n");
 		exit(2);
 	}
+		bzero(packet_buffer, packlen);
+
 
     icp = (struct icmphdr *)packet_buffer;
 
@@ -303,16 +305,18 @@ int pinger(char *str )
     tv_out.tv_sec = 0;//RECV_TIMEOUT;
     tv_out.tv_usec = 0;
 
- printf("setsockopt [%d]\n ",   setsockopt(sock, SOL_IP, SO_RCVTIMEO,
-                   (const char*)&tv_out, sizeof tv_out));
+	int sockopt =  setsockopt(sock, SOL_IP, SO_RCVTIMEO,
+                   (const char*)&tv_out, sizeof tv_out);
+
+
 
 //printf("setsockopt [%d]\n " , 
-   int ttl = 15;		     /*	max = 255 */
+   int ttl = 1;		     /*	max = 255 */
      setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 //);
 
 
-
+ printf("setsockopt [%d]\n ",  sockopt );
 
 
 	//printf( "TTL  = %d "   , get_sock_ttl(sock));
@@ -338,7 +342,7 @@ int pinger(char *str )
 
 
 	gettimeofday(&stats.timediff.recieved,NULL);
-
+	free(packet_buffer);
 	close(sock);
 	print_ligne_intermediaire();
 		return(1);
