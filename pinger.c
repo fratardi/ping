@@ -238,7 +238,7 @@ int pinger(char *str )
 	int		alen = 0;
 
 	unsigned char *packet_buffer = NULL;
-	char addrbuf    [INET6_ADDRSTRLEN] = "hellllllllllomy name is rebecca\0"; //message you want to send in ? 
+	char addrbuf    [INET6_ADDRSTRLEN] = "hellllllllllomy would you like to send a ping requesr\0"; //message you want to send in ? 
 	char hostname[NI_MAXHOST];
 	struct icmphdr *icp = NULL;
 	struct addrinfo* result = NULL;

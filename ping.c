@@ -96,6 +96,7 @@ void  print_ligne_intermediaire(void)
 
 void * func(void *arg )
 {
+	printf("\n PRTIDFUNC ==  %lu\n",pthread_self());
 	pinger(stats.ip);
 	return(NULL);
 }
@@ -107,12 +108,14 @@ void send_ping(void)
 
 	memset(&ptid,0 ,sizeof(pid_t));
 
-		printf( "\npthreadcreate == %d \n " , 	
-	 	pthread_create(&ptid, NULL, &func, NULL) );
-	//	pthread_detach(&ptid);
-	//	pthread_cancel(&ptid);
-printf("\n PRTID ==  %lu\n" , ptid);
-//		pthread_exit(NULL);
+	printf( "\npthreadcreate == %d \n " , 	
+	pthread_create(&ptid, NULL, &func, NULL) );
+	printf("\n PRTIDBEF  ==  %lu\n" , ptid);
+//	pthread_detach(&ptid);
+	printf("\n PRTIDAFT  ==  %lu\n" , ptid);
+	 pthread_join(&ptid, NULL);
+	// pthread_join( ptid, __null );
+	// pthread_exit(NULL);
 
 }
 
