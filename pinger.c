@@ -215,23 +215,17 @@ int listen_icmp(int sock)
 	return ret;
 }
 
-
-// get the curent ttl info of a ipv4 socket
-int get_ttl(int sock)
+// getsthe ttlinfo of a socket
+void get_ttlinfo(int sock)
 {
 	int ret;
-	int ttl = -1;
-	struct sockaddr_in addr;
-	socklen_t addrlen = sizeof(addr);
-	ret = getsockname(sock, (struct sockaddr *)&addr, &addrlen);
+	struct timeval ttl;
+	socklen_t ttl_len = sizeof(ttl);
+	ret = getsockopt(sock, IPPROTO_IPV6, IPV6_UNICAST_HOPS, &ttl, &ttl_len);
 	if (ret == -1)
-		perror("getsockname");
+		perror("getsockopt");
 	else
-		ttl = addr.sin_addr.s_addr;
-
-
-
-	return ttl;
+		printf("ttl: %d\n", ttl.tv_sec);
 }
 
 
@@ -320,6 +314,7 @@ int pinger(char *str )
 
 
 
+
 	//printf( "TTL  = %d "   , get_sock_ttl(sock));
 
 
@@ -330,8 +325,6 @@ int pinger(char *str )
 		exit(2);
 	}
 
-	printf(" TTL = %d" , get_ttl(sock));
-	
 	
 	
 	/// wait message from the server
