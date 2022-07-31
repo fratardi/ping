@@ -206,7 +206,7 @@ int listen_icmp(int sock)
 	{
 		printf("officially received %d bytes\n", ret);
 		//print_sockaddr_in6(&addr);
-		print_icmp((struct icmp *)buf);
+	//	print_icmp((struct icmp *)buf);
 
 	}
 
@@ -279,6 +279,9 @@ int pinger(char *str )
 	if (sock == -1) {
 		perror("Error creating socket");
 	}
+
+
+	
 	if (getsockname(sock, (struct sockaddr*)&source, (unsigned int *)&alen) == -1) 
 	{
 			perror("getsockname");
@@ -289,6 +292,7 @@ int pinger(char *str )
 		fprintf(stderr, "ping: out of memory.\n");
 		exit(2);
 	}
+
     icp = (struct icmphdr *)packet_buffer;
 
 	init_icp_header(icp);
@@ -309,7 +313,7 @@ int pinger(char *str )
                    (const char*)&tv_out, sizeof tv_out));
 
 //printf("setsockopt [%d]\n " , 
-   int ttl = 1;		     /*	max = 255 */
+   int ttl = 15;		     /*	max = 255 */
      setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 //);
 

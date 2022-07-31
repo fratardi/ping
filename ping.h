@@ -16,10 +16,19 @@
 #include <sys/uio.h>
 #include <sys/socket.h>
 
+#include <pthread.h>
+
 #ifndef PINH_H
 #define PING_H
 #define BUFFER_SIZE 1024
 
+
+// typedef
+// struct s_list{
+// 	void * memory;
+// 	size_t size;
+// 	t_list *next;
+// }		t_list;
 
 
 typedef
@@ -57,7 +66,9 @@ typedef
 struct s_stats{
 	struct addrinfo* hostinfo;
 
-
+	unsigned char * packet_buffer;	
+char *addrbuf; 
+	int packlen;
 /// utils 
 	int fd ; 
 

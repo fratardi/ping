@@ -3,9 +3,9 @@ NAME = ping
 
 MAIN = ping.c
 
-FLAGS =  -g3  -Wuninitialized -Wall -Wextra -Werror
+FLAGS = -pthread
 
-FLAG__DBG = # -fsanitize=address
+FLAG__DBG =   -g3  -Wuninitialized -Wall -Wextra -Werror 
 
 SRCDIR = #./src/
 

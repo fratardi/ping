@@ -12,8 +12,11 @@ void handle_sigint(int sig)
 	unsigned int duration_secondes  =   +end.tv_sec - stats.start.tv_sec  ;
 	int duration_usec =   ((end.tv_sec - stats.start.tv_sec ) /1000) > 100    ? stats.start.tv_usec -  end.tv_usec   : 
   		end.tv_usec - stats.start.tv_usec  ; 
-	printf("time  %u.%ums\n" , duration_secondes, duration_usec / 1000);
+	printf("\ntime  %u.%ums\n" , duration_secondes, duration_usec / 1000);
 	free (stats.ip);
+	free (stats. hostname);
+	
+	free (stats.packet_buffer);
 	exit(EXIT_SUCCESS);
 }
 /*
@@ -25,25 +28,11 @@ void handle_sigint(int sig)
 * */
 
 
-uint16_t checksum_packet(struct icmphdr *icp)
+// generates a random int between 1 and 4 
+int get_random()
 {
-	uint16_t *addr = (uint16_t *)icp;
-	int len = sizeof(struct icmphdr) + sizeof(struct timeval);
-	int sum = 0;
-	int nleft = len;
-	while (nleft > 1) {
-		sum += *addr++;
-		nleft -= 2;
-	}
-	if (nleft == 1)
-		sum += *(unsigned char *)addr;
-	sum = (sum >> 16) + (sum & 0xffff);
-	sum += (sum >> 16);
-	return (uint16_t)~sum;
+	return (rand() % 4) + 1;
 }
-
-
-
 
 
 
@@ -55,7 +44,12 @@ void init_stats(int argc , char **argv)
 {
 	(void)argc,
 	(void)argv;
-
+	
+stats.packlen = 200;
+		if (!(stats.packet_buffer = (unsigned char *)malloc((unsigned int)stats.packlen))) {
+		fprintf(stderr, "ping: out of memory.\n");
+		exit(2);
+	}
 
 
 	stats.ip = hostname_to_ipv6(argv[1]);
@@ -82,6 +76,10 @@ void init_struct(int argc , char ** argv )
 	stats.ip = hostname_to_ipv6(argv[1]);
 	stats. hostname = ipv4_to_hostname(stats.ip);
 	printf("INIT STATS[%s]  [%s] \n\n" , stats.ip, ipv4_to_hostname(stats.ip));
+
+
+	
+
 }
 
 
@@ -94,22 +92,47 @@ void  print_ligne_intermediaire(void)
 	printf("\n [%zu ]icmp.seq=%u time=%lu.%lu ms\n" ,len , stats.total_packets  ,diff / 100 ,   diff % 100);
 }
 
+
+
+void * func(void *arg )
+{
+	int time = get_random();
+
+	printf(" sleeping %d \n", time);
+	printf("\nT1hreads are equal.\n");
+
+	pinger(stats.ip);
+	
+	printf("\nT2hreads are equal\n");
+	return(NULL);
+}
+
+void send_ping(void)
+{
+
+	pthread_t ptid;
+
+	memset(&ptid,0 ,sizeof(pid_t));
+
+		printf( "\npthreadcreate == %d \n " , 	
+	 	pthread_create(&ptid, NULL, &func, NULL) );
+printf("\n PRTID ==  %lu\n" , ptid);
+	//	pthread_exit(NULL);
+
+}
+
+
 int main(int argc , char **argv)
 {
+
 	signal(SIGINT, handle_sigint);
-//	init_stats(argc,  argv);make re
 	init_struct(argc , argv );
-
-// only_one_valid_place(argc ,argv);
-
-
-
-
 	printf( "IP = [%s]" , stats.ip );
 	if(stats.ip)
 	while(1)
 	{
-		pinger(stats.ip);
+	//	pinger(stats.ip);
+		send_ping();
 		sleep(1);
 	}
 	return(0);

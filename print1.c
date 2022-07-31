@@ -104,7 +104,7 @@ hints.ai_family = AF_INET;
 
 
 
-    stats.hostname = ipv4_to_hostname(ip);
+//    stats.hostname = ipv4_to_hostname(ip);
     freeaddrinfo(servinfo);
     return strdup(ip);
 }
