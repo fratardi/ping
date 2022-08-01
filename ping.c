@@ -3,6 +3,8 @@
 struct s_stats stats;
 
 
+#define __null 0
+
 
 void handle_sigint(int sig)
 {  
@@ -12,11 +14,8 @@ void handle_sigint(int sig)
 	unsigned int duration_secondes  =   +end.tv_sec - stats.start.tv_sec  ;
 	int duration_usec =   ((end.tv_sec - stats.start.tv_sec ) /1000) > 100    ? stats.start.tv_usec -  end.tv_usec   : 
   		end.tv_usec - stats.start.tv_usec  ; 
-	printf("\ntime  %u.%ums\n" , duration_secondes, duration_usec / 1000);
+	printf("time  %u.%ums\n" , duration_secondes, duration_usec / 1000);
 	free (stats.ip);
-	free (stats. hostname);
-	
-	free (stats.packet_buffer);
 	exit(EXIT_SUCCESS);
 }
 /*
@@ -27,13 +26,28 @@ void handle_sigint(int sig)
  * @return struct timeval : difference de temps
 * */
 
-
-// generates a random int between 1 and 4 
-int get_random()
+uint16_t checksum_packet(struct icmphdr *icp)
 {
-	return (rand() % 4) + 1;
+	uint16_t *addr = (uint16_t *)icp;
+	int len = sizeof(struct icmphdr) + sizeof(struct timeval);
+	int sum = 0;
+	int nleft = len;
+	while (nleft > 1) {
+		sum += *addr++;
+		nleft -= 2;
+	}
+	if (nleft == 1)
+		sum += *(unsigned char *)addr;
+	sum = (sum >> 16) + (sum & 0xffff);
+	sum += (sum >> 16);
+	return (uint16_t)~sum;
 }
 
+
+
+
+#include <sys/uio.h>
+#include <sys/socket.h>
 
 
 /*
@@ -44,45 +58,12 @@ void init_stats(int argc , char **argv)
 {
 	(void)argc,
 	(void)argv;
-	
-stats.packlen = 200;
-		if (!(stats.packet_buffer = (unsigned char *)malloc((unsigned int)stats.packlen))) {
-		fprintf(stderr, "ping: out of memory.\n");
-		exit(2);
-	}
-
-
 	stats.ip = hostname_to_ipv6(argv[1]);
-	printf(
-		"PING %s (%s): %d(%d) bytes of data.\n",
-		argv[1],
-		stats.ip,
-		PING_PKT_S,
-		PING_PKT_S + 28
-	);
-
 	stats.success 				= 0,
 	stats.total_packets 		= 0,
 	stats.failed 				= 0,
 	gettimeofday(&stats.start, NULL);
-
 }
-
-void init_struct(int argc , char ** argv )
-{
-(void)	argv; 
-(void)	argc;
-	stats.arg = argv[1];
-	stats.ip = hostname_to_ipv6(argv[1]);
-	stats. hostname = ipv4_to_hostname(stats.ip);
-	printf("INIT STATS[%s]  [%s] \n\n" , stats.ip, stats.hostname);
-
-
-	
-
-}
-
-
 
 void  print_ligne_intermediaire(void)
 {
@@ -94,48 +75,39 @@ void  print_ligne_intermediaire(void)
 
 
 
-void * func(void *arg )
-{
-	printf("\n PRTIDFUNC ==  %lu\n",pthread_self());
-	pinger(stats.ip);
-	return(NULL);
-}
 
-void send_ping(void)
-{
 
-	pthread_t ptid;
 
-	memset(&ptid,0 ,sizeof(pid_t));
 
-	printf( "\npthreadcreate == %d \n " , 	
-	pthread_create(&ptid, NULL, &func, NULL) );
-	printf("\n PRTIDBEF  ==  %lu\n" , ptid);
-//	pthread_detach(&ptid);
-	printf("\n PRTIDAFT  ==  %lu\n" , ptid);
-	 pthread_join(&ptid, NULL);
-	// pthread_join( ptid, __null );
-	// pthread_exit(NULL);
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 int main(int argc , char **argv)
 {
-
 	signal(SIGINT, handle_sigint);
-	init_struct(argc , argv );
+	init_stats(argc,  argv);
 	printf( "IP = [%s]" , stats.ip );
 	if(stats.ip)
 	while(1)
 	{
-	//	pinger(stats.ip);
-		send_ping();
+		pinger(stats.ip);
+		print_ligne_intermediaire();
 		sleep(1);
 	}
 	return(0);
 }
-
-
-//
-

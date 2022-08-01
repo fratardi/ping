@@ -6,26 +6,24 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jul 31 05:15:34 2022
+# Make data base, printed on Mon Aug  1 05:07:52 2022
 
 # Variables
 
+# 'override' directive
+GNUMAKEFLAGS := 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
-# environment
-NVM_IOJS_ORG_MIRROR = https://iojs.org/dist
+# automatic
+?F = $(notdir $?)
 # environment
 DESKTOP_SESSION = ubuntu
 # default
 .SHELLFLAGS := -c
-# automatic
-?F = $(notdir $?)
 # environment
 XDG_SESSION_CLASS = user
 # environment
 XDG_SESSION_TYPE = x11
-# environment
-VSCODE_LOG_NATIVE = false
 # makefile (from 'Makefile', line 19)
 SRCO = $(addprefix $(SRCDIR), $(FUNCTIONS:.c=.o)) $(MAIN:.c=.o)
 # automatic
@@ -33,13 +31,13 @@ SRCO = $(addprefix $(SRCDIR), $(FUNCTIONS:.c=.o)) $(MAIN:.c=.o)
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
-XAUTHORITY = /mnt/nfs/homes/fratardi/.Xauthority
+XAUTHORITY = /run/user/1000/gdm/Xauthority
 # environment
 GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /mnt/nfs/homes/fratardi/ping
+CURDIR := /home/test/42/ping
 # makefile
 SHELL = /bin/sh
 # makefile (from 'Makefile', line 14)
@@ -51,7 +49,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/bin/code
 # environment
-JOURNAL_STREAM = 9:290923
+JOURNAL_STREAM = 8:45684
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -59,97 +57,85 @@ MAKEFILE_LIST :=  Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/terminator.desktop
-# 'override' directive
-GNUMAKEFLAGS := 
+IM_CONFIG_PHASE = 1
 # environment
-MANDATORY_PATH = /usr/share/gconf/ubuntu.mandatory.path
+USERNAME = test
 # environment
-XDG_DATA_DIRS = /usr/share/gnome:/usr/share/ubuntu:/mnt/nfs/homes/fratardi/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+MAKELEVEL := 0
 # environment
-DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/31706/bus
+XDG_DATA_DIRS = /usr/share/ubuntu:/home/test/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
-VSCODE_VERBOSE_LOGGING = true
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 75821
+MANAGERPID = 2867
 # environment
-NVM_PATH = /mnt/nfs/homes/fratardi/.nvm/versions/node/v10.19.0/lib/node
+LC_NAME = fr_FR.UTF-8
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/31706/vscode-ipc-33337174-4520-405a-942b-7bec8d3f5019.sock
-# environment
-VSCODE_CWD = /mnt/nfs/homes/fratardi/ping
-# environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session2
-# environment
-KRB5CCNAME = FILE:/tmp/krb5cc_31706_NYMaVv
+VSCODE_CWD = /home/test/42/ping
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /mnt/nfs/homes/fratardi/.nvm/versions/node/v10.19.0/bin:/mnt/nfs/homes/fratardi/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
-GPG_AGENT_INFO = /run/user/31706/gnupg/S.gpg-agent:0:1
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/e1r3p17.clusters.42paris.fr:@/tmp/.ICE-unix/76316,unix/e1r3p17.clusters.42paris.fr:/tmp/.ICE-unix/76316
+GJS_DEBUG_OUTPUT = stderr
 # environment
-XDG_RUNTIME_DIR = /run/user/31706
+LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-NVM_BIN = /mnt/nfs/homes/fratardi/.nvm/versions/node/v10.19.0/bin
+SESSION_MANAGER = local/test-MS-7760:@/tmp/.ICE-unix/3116,unix/test-MS-7760:/tmp/.ICE-unix/3116
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
-VSCODE_LOG_STACK = false
-# environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 1476f8e4981c472085a229a67c285df2
+INVOCATION_ID = fb46a6f21e4e4ebcaeacfa1885e05104
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
-XDG_GREETER_DATA_DIR = /var/lib/lightdm-data/fratardi
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
 # environment
 XDG_SESSION_DESKTOP = ubuntu
 # environment
-SSH_AUTH_SOCK = /run/user/31706/keyring/ssh
-# environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 76742
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# makefile (from 'Makefile', line 10)
+SRCDIR = 
 # automatic
 %F = $(notdir $%)
 # environment
-DISPLAY = :0
-# makefile (from 'Makefile', line 10)
-SRCDIR = 
+DISPLAY = :1
 # environment
-VSCODE_PIPE_LOGGING = true
-# environment
-PWD = /mnt/nfs/homes/fratardi/ping
+PWD = /home/test/42/ping
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 76280
+SSH_AGENT_PID = 3080
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
 GTK_MODULES = gail:atk-bridge
 # environment
-MANPATH = /mnt/nfs/homes/fratardi/.nvm/versions/node/v10.19.0/share/man:/usr/local/man:/usr/local/share/man:/usr/share/man
-# environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-HOME = /mnt/nfs/homes/fratardi
+HOME = /home/test
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /mnt/nfs/homes/fratardi/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+VSCODE_CODE_CACHE_PATH = /home/test/.config/Code/CachedData/3b889b090b5ad5793f524b5d1d39fda662b96a2a
 # environment
-LOGNAME = fratardi
+LOGNAME = test
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
-# environment
-NVM_CD_FLAGS = -q
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# automatic
++F = $(notdir $+)
 # makefile (from 'Makefile', line 22)
 HEADERS = ./ping.h
 # environment
-ELECTRON_NO_ATTACH_CONSOLE = 1
+ZSH = /home/test/.oh-my-zsh
 # makefile (from 'Makefile', line 8)
 FLAG__DBG = -g3  -Wuninitialized -Wall -Wextra -Werror 
 # environment
@@ -159,7 +145,7 @@ GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
-MAKELEVEL := 0
+LC_TIME = fr_FR.UTF-8
 # environment
 COLORTERM = truecolor
 # default
@@ -169,99 +155,101 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SHLVL = 2
+SHLVL = 1
 # environment
-IM_CONFIG_PHASE = 1
+GNOME_SHELL_SESSION_MODE = ubuntu
 # default
 MAKE_VERSION := 4.2.1
 # environment
-USER = fratardi
+USER = test
+# environment
+LC_MONETARY = fr_FR.UTF-8
 # makefile
 .DEFAULT_GOAL := all
 # environment
 XDG_CURRENT_DESKTOP = Unity
+# makefile (from 'Makefile', line 2)
+NAME = ping
 # environment
-LIBVIRT_DEFAULT_URI = qemu:///system
+LESS = -R
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
+# environment
+LC_TELEPHONE = fr_FR.UTF-8
 # default
 MAKE_COMMAND := make
 # environment
-OLDPWD = /mnt/nfs/homes/fratardi
+OLDPWD = /home/test
 # makefile (from 'Makefile', line 16)
 FUNCTIONS = print1.c   pinger.c  init_ping.c 
-# environment
-TERMINATOR_DBUS_PATH = /net/tenshu/Terminator2
 # default
 .VARIABLES := 
 # automatic
 *F = $(notdir $*)
 # environment
-XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
-# environment
-VSCODE_IPC_HOOK = /run/user/31706/vscode-93e34021-1.68.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-489b2748-1.69.2-main.sock
 # makefile
 MAKEFLAGS = pqrR
 # environment
 MFLAGS = -pqrR
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
-# environment
-NVM_DIR = /mnt/nfs/homes/fratardi/.nvm
 # makefile (from 'Makefile', line 4)
 MAIN = ping.c
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
 GDK_BACKEND = x11
-# automatic
-+F = $(notdir $+)
+# environment
+LC_PAPER = fr_FR.UTF-8
 # environment
 QT_ACCESSIBILITY = 1
-# environment
-DEFAULTS_PATH = /usr/share/gconf/ubuntu.default.path
 # makefile (from 'Makefile', line 12)
 COMPILER = clang
 # default
 MAKEFILES := 
+# environment
+LC_NUMERIC = fr_FR.UTF-8
 # automatic
 <F = $(notdir $<)
 # environment
+LC_MEASUREMENT = fr_FR.UTF-8
+# environment
+PAGER = less
+# environment
 LC_ALL = C
 # environment
-NVM_NODEJS_ORG_MIRROR = https://nodejs.org/dist
-# environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
+# environment
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/34fe3373_24aa_4062_a3d9_26fe50ce543e
 # automatic
 ^F = $(notdir $^)
+# environment
+GNOME_TERMINAL_SERVICE = :1.87
 # default
 SUFFIXES := 
 # makefile (from 'Makefile', line 6)
 FLAGS = -pthread
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
+# environment
+WINDOWPATH = 2
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
-GJS_DEBUG_OUTPUT = stderr
-# makefile (from 'Makefile', line 2)
-NAME = ping
+LC_IDENTIFICATION = fr_FR.UTF-8
 # default
 .RECIPEPREFIX := 
+# environment
+LC_ADDRESS = fr_FR.UTF-8
 # environment
 LANG = C
 # environment
 TERM = xterm-256color
 # environment
-TERMINATOR_DBUS_NAME = net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873
-# environment
-DOCKER_HOST = unix:///run/user/31706/docker.sock
-# environment
-VSCODE_PID = 82525
-# environment
-TERMINATOR_UUID = urn:uuid:229fd84d-7794-4000-a8a0-b6d86bf6f0f1
+VSCODE_PID = 9590
 # variable set hash-table stats:
-# Load=125/1024=12%, Rehash=0, Collisions=31/158=20%
+# Load=119/1024=12%, Rehash=0, Collisions=24/152=16%
 
 # Pattern-specific Variable Values
 
@@ -269,9 +257,9 @@ TERMINATOR_UUID = urn:uuid:229fd84d-7794-4000-a8a0-b6d86bf6f0f1
 
 # Directories
 
-# . (device 59, inode 197756409): 17 files, no impossibilities.
+# . (device 2053, inode 4077123): 18 files, no impossibilities.
 
-# 17 files, no impossibilities in 1 directories.
+# 18 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -279,7 +267,6 @@ TERMINATOR_UUID = urn:uuid:229fd84d-7794-4000-a8a0-b6d86bf6f0f1
 #  recipe to execute (from 'Makefile', line 25):
 	$(COMPILER) $(FLAGS) -o $@ -c $<
 
- 
 # 1 implicit rules, 0 (0.0%) terminal.
 
 # Files
@@ -294,28 +281,29 @@ all: ping
 # Not a target:
 ping.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-31 05:12:47.987481163
+ 
+#  Last modified 2022-08-01 04:01:24.082664042
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-31 05:14:17.729223325
+#  Last modified 2022-08-01 04:00:44.365753241
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 ping.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-31 05:11:54.274635488
+#  Last modified 2022-08-01 04:01:24.854681732
 #  File has been updated.
 #  Successfully updated.
 
 pinger.o: pinger.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'pinger'
-#  Last modified 2022-07-31 05:14:22.075210838
+#  Last modified 2022-08-01 05:05:48.527388819
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -332,7 +320,7 @@ fclean: clean
 print1.o: print1.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'print1'
-#  Last modified 2022-07-31 05:14:21.975211125
+#  Last modified 2022-08-01 05:05:48.435379585
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -341,7 +329,7 @@ print1.o: print1.c ping.h
 init_ping.o: init_ping.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'init_ping'
-#  Last modified 2022-07-31 05:14:22.141210648
+#  Last modified 2022-08-01 05:05:48.607396848
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -376,20 +364,20 @@ dbg: ping
 # Not a target:
 pinger.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-31 05:13:07.363425493
+#  Last modified 2022-08-01 04:39:22.473602889
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 print1.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 07:34:03.150826069
+#  Last modified 2022-08-01 04:00:44.365753241
 #  File has been updated.
 #  Successfully updated.
 
 ping: print1.o pinger.o init_ping.o ping.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-31 05:14:22.32521012
+#  Last modified 2022-08-01 05:05:48.783414513
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 31):
@@ -398,7 +386,7 @@ ping: print1.o pinger.o init_ping.o ping.o
 ping.o: ping.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'ping'
-#  Last modified 2022-07-31 05:14:22.204210467
+#  Last modified 2022-08-01 05:05:48.663402469
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 25):
@@ -407,7 +395,7 @@ ping.o: ping.c ping.h
 # Not a target:
 init_ping.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 03:29:20.12798129
+#  Last modified 2022-08-01 04:00:44.365753241
 #  File has been updated.
 #  Successfully updated.
 
@@ -419,12 +407,12 @@ init_ping.c:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 31 / storage = 236 B / avg = 7 B
-# current buf: size = 8162 B / used = 236 B / count = 31 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 32 / storage = 244 B / avg = 7 B
+# current buf: size = 8162 B / used = 244 B / count = 32 / avg = 7 B
 
-# strcache performance: lookups = 70 / hit rate = 55%
+# strcache performance: lookups = 71 / hit rate = 54%
 # hash-table stats:
-# Load=31/8192=0%, Rehash=0, Collisions=1/70=1%
-# Finished Make data base on Sun Jul 31 05:15:34 2022
+# Load=32/8192=0%, Rehash=0, Collisions=1/71=1%
+# Finished Make data base on Mon Aug  1 05:07:52 2022
 
  

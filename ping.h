@@ -16,19 +16,9 @@
 #include <sys/uio.h>
 #include <sys/socket.h>
 
-#include <pthread.h>
-
 #ifndef PINH_H
 #define PING_H
-#define BUFFER_SIZE 1024
 
-
-// typedef
-// struct s_list{
-// 	void * memory;
-// 	size_t size;
-// 	t_list *next;
-// }		t_list;
 
 
 typedef
@@ -38,45 +28,9 @@ struct 		s_timediff	{
 }			t_timediff;
 
 
-
-typedef
-struct s_packet_infos{
-
-	struct 	icmphdr		icmp_header;
-	struct 	sockaddr_in	dest_addr;
-	struct 	sockaddr_in	src_addr;
-	struct 	sockaddr_in	from_addr;
-	size_t packet_size;
-	char ttl;
-
-	struct msghdr msg;
-	struct iovec iov;
-
-	struct in6_addr *addrv6;
-	struct in_addr 	*addrv4;
-	struct icmphdr *buf;
-	struct sockaddr_in source ;
-	struct sockaddr_in dst  ;
-}			t_packet_infos;
-
-
-// grosse valise globale
-
 typedef
 struct s_stats{
-	struct addrinfo* hostinfo;
-
-	unsigned char * packet_buffer;	
-char *addrbuf; 
-	int packlen;
-/// utils 
-	int fd ; 
-
-/// packet infos
-	struct s_packet_infos packet_infos;
-	char 	* arg ;
-	char 	* ip;	
-	char 	* hostname;
+	char * ip;
 	unsigned int        total_packets;
 	unsigned int		success;
 	unsigned int		failed;
@@ -96,21 +50,15 @@ void 			print_stats();
 void 			init_ping();
 char 			*hostname_to_ipv6(char *hostname);
 struct timeval 	get_time_diff(struct timeval start, struct timeval end);
-char *ipv4_to_hostname(char *ipv4);
-unsigned  char only_one_valid_place(int argc , char** argv);
-unsigned int argvparse(int argc , char** argv);
+
 uint16_t checksum_packet(struct icmphdr *icp);
 
-void		print_ligne_intermediaire();;
 void init_icp_header(struct icmphdr *icp);
 #define PORT_NO 		0
 #define MAXIPLEN  		60
 #define MAXICMPLEN 		76
-#define PING_PKT_S 		56
+#define PING_PKT_S 		64
 #define RECV_TIMEOUT 	1
-#define OPTS 			"l46v"
-
-#define __null 0
  //struct timeval trucc;
 #endif
 // # define CLOCK_MONOTONIC                1
@@ -124,6 +72,19 @@ void init_icp_header(struct icmphdr *icp);
 // # define ODDBYTE(v)	((unsigned short)(v) << 8)
 // #else
 // # define ODDBYTE(v)	htons((unsigned short)(v) << 8)
+
+
+
+// macro thet checks endianness of a value and swaps it if necessary
+# define ODDBYTE(v)	((unsigned short)(v) << 8)
+// macro that swaps the endianness of a value
+# define SWAP(v)		(((v) >> 8) | ((v) << 8))
+// macro that ectract the first byte from an long long value
+# define FIRSTBYTE(v)	((v) & 0xFF)
+
+
+
+
 #endif
 
 // struct addrinfo {
@@ -136,24 +97,6 @@ void init_icp_header(struct icmphdr *icp);
 //     char*     ai_canonname;      /* canonical name */
 //     struct    addrinfo* ai_next; /* this struct can form a linked list */
 // };
-
-// struct sockaddr {
-// sa_family_t  sa_family  Address family. 
-// char         sa_data[]  Socket address (variable-length data)
-//};
-
-
-// struct in6_addr
-//   {
-//     union
-//       {
-// 	uint8_t	__u6_addr8[16];
-// 	uint16_t __u6_addr16[8];
-// 	uint32_t __u6_addr32[4];
-//       } __in6_u;
-
-//   };
-
 
 // Icmp header struct 
 
@@ -203,22 +146,3 @@ void init_icp_header(struct icmphdr *icp);
 
 
 		// int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
-
-// https://www.geeksforgeeks.org/ping-in-c/
-
-// set
-
-// #define IP_OPTIONS          1           /* set/get IP per-packet options    */
-// #define IP_MULTICAST_IF     2           /* set/get IP multicast interface   */
-// #define IP_MULTICAST_TTL    3           /* set/get IP multicast timetolive  */
-// #define IP_MULTICAST_LOOP   4           /* set/get IP multicast loopback    */
-// #define IP_ADD_MEMBERSHIP   5           /* add  an IP group membership      */
-// #define IP_DROP_MEMBERSHIP  6           /* drop an IP group membership      */
-// #define IP_TTL              7           /* set/get IP Time To Live          */
-// #define IP_TOS              8           /* set/get IP Type Of Service       */
-// #define IP_DONTFRAGMENT     9           /* set/get IP Don't Fragment flag   */
-// #define IP_DEFAULT_MULTICAST_TTL   1    /* normally limit m'casts to 1 hop  */
-// #define IP_DEFAULT_MULTICAST_LOOP  1    /* normally hear sends if a member  */
-// #define IP_MAX_MEMBERSHIPS         20   /* per socket; must fit in one mbuf */
-// https://www.frameip.com/entete-icmp/
-// https://inetdoc.developpez.com/tutoriels/filtrage-iptables/?page=page_3

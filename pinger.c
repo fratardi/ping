@@ -74,23 +74,44 @@ unsigned short checksum(unsigned short *buf, int nwords)
 	return (unsigned short)(~sum);
 }
 
+
+
+
+
+
+
+
+// change endianness of a string of bytes
+void change_endianness(char *str, int len)
+{
+	int i;
+	char tmp;
+	for (i = 0; i < len / 2; i++) {
+		tmp = str[i];
+		str[i] = str[len - i - 1];
+		str[len - i - 1] = ~tmp;
+	}
+}
+
+
+
+
+
+
 // print icmp struct
 void print_icmp(struct icmp *icmp)
 {
 
+
+
+//change_endianness(icmp->icmp_data , strlen(icmp->icmp_data));
 
 	ICMP_INFOTYPE(icmp->icmp_type);
 
 	printf("\n=====================\nREPLY\nICMP_INFOTYPE%d " , 	ICMP_INFOTYPE(icmp->icmp_type));
 	printf("icmp_type: %hhd   \n", icmp->icmp_type   );
 	printf("icmp_code: %hu\n", icmp->icmp_code);
-
-
-
-
-
-
-	printf("REALSUM %hu\n", checksum((unsigned short *)icmp,39 + 8));
+	printf("REALSUM %hu\n", checksum((unsigned short *)icmp,12));
 	printf("icmp_cksum: %hu\n", icmp->icmp_cksum);
 
 	printf("icmp->icmp_pptr: %d\n", icmp->icmp_pptr);
@@ -113,8 +134,9 @@ void print_icmp(struct icmp *icmp)
 	printf("icmp->icmp__otime: %u\n"  , icmp->icmp_otime);
 	printf("icmp->icmp_rtime %u\n"  , icmp->icmp_rtime);
 	printf("icmp->icmp_ttime: %u\n"  , icmp->icmp_ttime);
+ 	printf("icmp->_data %s\n"  , icmp->icmp_data);
 
- printf("icmp->_data %s\n"  , icmp->icmp_data);
+
 
 printf("icmp->icmp_dun.id_data[0] %d\n" , icmp->icmp_dun.id_data[0]);
 
@@ -177,7 +199,7 @@ void get_socketinfo(int sock)
 int open_icmp_socket()
 {
 	int sock;
-	sock = socket(AF_INET,  SOCK_DGRAM, IPPROTO_ICMP);
+	sock = socket(AF_INET,  SOCK_RAW, IPPROTO_ICMP);
 	if (sock == -1)
 		perror("socket");
 
@@ -192,6 +214,8 @@ int open_icmp_socket()
 // function that listen on given socket for ICMP packet
 int listen_icmp(int sock)
 {
+#define BUFFER_SIZE 1024
+
 	int ret;
 	char buf[BUFFER_SIZE];
 	struct sockaddr_in6 addr;
@@ -205,8 +229,8 @@ int listen_icmp(int sock)
 	else
 	{
 		printf("officially received %d bytes\n", ret);
-		//print_sockaddr_in6(&addr);
-	//	print_icmp((struct icmp *)buf);
+		print_sockaddr_in6(&addr);
+		print_icmp((struct icmp *)buf);
 
 	}
 
@@ -221,7 +245,7 @@ void get_ttlinfo(int sock)
 	int ret;
 	struct timeval ttl;
 	socklen_t ttl_len = sizeof(ttl);
-	ret = getsockopt(sock, IPPROTO_IPV6, IPV6_UNICAST_HOPS, &ttl, &ttl_len);
+	ret = getsockopt(sock, IPPROTO_IP, IP_MULTICAST_TTL , &ttl, &ttl_len);
 	if (ret == -1)
 		perror("getsockopt");
 	else
@@ -238,7 +262,7 @@ int pinger(char *str )
 	int		alen = 0;
 
 	unsigned char *packet_buffer = NULL;
-	char addrbuf    [INET6_ADDRSTRLEN] = "hellllllllllomy would you like to send a ping requesr\0"; //message you want to send in ? 
+	char addrbuf    [INET6_ADDRSTRLEN] = "helloworld\n\0"; //message you want to send in ? 
 	char hostname[NI_MAXHOST];
 	struct icmphdr *icp = NULL;
 	struct addrinfo* result = NULL;
@@ -291,35 +315,32 @@ int pinger(char *str )
 
     icp = (struct icmphdr *)packet_buffer;
 
+// 0xf7ff;
+// 0x7FFF;
+// 0xFF7F;
 	init_icp_header(icp);
-
-
+	icp->checksum = 0xFFF7;
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
 	//set_ttl(sock ,29);
 
 
 // /int ttl = 12; /* max = 255 */
-
+  int ttl = 254;
  struct timeval tv_out;
     tv_out.tv_sec = 0;//RECV_TIMEOUT;
     tv_out.tv_usec = 0;
 
-	int sockopt =  setsockopt(sock, SOL_IP, SO_RCVTIMEO,
-                   (const char*)&tv_out, sizeof tv_out);
+	get_ttlinfo(sock);
 
+ setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
+	setsockopt(sock, SOL_IP, SO_RCVTIMEO,(const char*)&tv_out, sizeof tv_out);
+   setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 
-
-//printf("setsockopt [%d]\n " , 
-   int ttl = 1;		     /*	max = 255 */
-     setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 //);
 
 
- printf("setsockopt [%d]\n ",  sockopt );
-
-
-	//printf( "TTL  = %d "   , get_sock_ttl(sock));
+	get_ttlinfo(sock);
 
 
 	size_t  mch  =   sendto(sock, icp, cc, 8, (struct sockaddr*)&dst, sizeof(dst));
