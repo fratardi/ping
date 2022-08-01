@@ -58,7 +58,7 @@ void print_sockaddr_in6(struct sockaddr_in6 *addr)
 
 	printf("sin6_port: %d\n", addr->sin6_port);
 	printf("sin6_flowinfo: %d\n", addr->sin6_flowinfo);
-//	print_in6_addr(&addr->sin6_addr);
+	print_in6_addr(&addr->sin6_addr);
 	printf("sin6_scope_id: %d\n", addr->sin6_scope_id);
 }
 
@@ -110,9 +110,9 @@ void print_icmp(struct icmp *icmp)
 
 	printf("\n=====================\nREPLY\nICMP_INFOTYPE%d " , 	ICMP_INFOTYPE(icmp->icmp_type));
 	printf("icmp_type: %hhd   \n", icmp->icmp_type   );
-	printf("icmp_code: %hu\n", icmp->icmp_code);
-	printf("REALSUM %hu\n", checksum((unsigned short *)icmp,12));
-	printf("icmp_cksum: %hu\n", icmp->icmp_cksum);
+	printf("icmp_code: %d\n", icmp->icmp_code);
+//	printf("REALSUM %hu\n", checksum((unsigned short *)icmp,12));
+	printf("icmp_cksum: %hx\n", icmp->icmp_cksum);
 
 	printf("icmp->icmp_pptr: %d\n", icmp->icmp_pptr);
 	printf("icmp->icmp_hun.ih_gwaddr.s_addr: %d\n"  , icmp->icmp_hun.ih_gwaddr.s_addr);
@@ -209,19 +209,45 @@ int open_icmp_socket()
 	return sock;
 }
 
+// function that prints the content of an msghdr struct
+void print_msghdr(struct msghdr *msg)
+{
+	printf("msg_name: %p\n", msg->msg_name);
+	printf("msg_namelen: %d\n", msg->msg_namelen);
+	printf("msg_iov: %p\n", msg->msg_iov);
+	printf("msg_iovlen: %d\n", msg->msg_iovlen);
+	printf("msg_control: %p\n", msg->msg_control);
+	printf("msg_controllen: %d\n", msg->msg_controllen);
+	printf("msg_flags: %d\n", msg->msg_flags);
+}
+
 
 
 // function that listen on given socket for ICMP packet
 int listen_icmp(int sock)
 {
 #define BUFFER_SIZE 1024
+	struct msghdr msg;
+
+// memset hdr to 0
+	memset(&msg, 0, sizeof(msg));
+
 
 	int ret;
 	char buf[BUFFER_SIZE];
-	struct sockaddr_in6 addr;
+	struct sockaddr_in addr;
 	socklen_t addr_len = sizeof(addr);
+		//ret =  recvmsg(   sock , &msg , MSG_WAITFORONE) ;
+
 	ret = recvfrom(sock, buf, BUFFER_SIZE,MSG_WAITFORONE, (struct sockaddr *)&addr, &addr_len);
-//		ret = recvfrom(sock, buf, BUFFER_SIZE,MSG_WAITFORONE, (struct sockaddr *)&addr, &addr_len);
+
+
+
+	printf("message size  %d " ,ret );
+
+		
+
+
 // MSG_WAITFORONE
 //MSG_WAITALL
 	if (ret == -1)
