@@ -199,7 +199,9 @@ void get_socketinfo(int sock)
 int open_icmp_socket()
 {
 	int sock;
-	sock = socket(AF_INET,  SOCK_RAW, IPPROTO_ICMP);
+sock = socket(AF_INET,  SOCK_RAW, IPPROTO_ICMP);
+
+//sock =	socket(AF_INET, SOCK_RAW, IPPROTO_IP);
 	if (sock == -1)
 		perror("socket");
 
@@ -215,14 +217,41 @@ void print_msghdr(struct msghdr *msg)
 	printf("msg_name: %p\n", msg->msg_name);
 	printf("msg_namelen: %d\n", msg->msg_namelen);
 	printf("msg_iov: %p\n", msg->msg_iov);
-	printf("msg_iovlen: %d\n", msg->msg_iovlen);
+	printf("msg_iovlen: %zu\n", msg->msg_iovlen);
 	printf("msg_control: %p\n", msg->msg_control);
-	printf("msg_controllen: %d\n", msg->msg_controllen);
+	printf("msg_controllen: %zu\n", msg->msg_controllen);
 	printf("msg_flags: %d\n", msg->msg_flags);
+
+}
+
+
+// print memory as hexdump
+void print_memory(char *mem, int len)
+{
+	int i;
+	for (i = 0; i < len; i++)
+		printf("%02x ", mem[i]);
+	printf("\n");
 }
 
 
 
+// printts void  as ip header
+void print_ip_header(void *ip_header)
+{
+	struct iphdr *ip = ip_header;
+	printf("IP Version: %d\n", ip->version);
+	printf("IP Header Length: %d\n", ip->ihl);
+	printf("IP Type of Service: %d\n", ip->tos);
+	printf("IP Total Length: %d\n", ip->tot_len);
+	printf("IP ID: %d\n", ip->id);
+	printf("IP Fragment Offset: %d\n", ip->frag_off);
+	printf("IP TTL: %d\n", ip->ttl);
+	printf("IP Protocol: %d\n", ip->protocol);
+	printf("IP Checksum: %d\n", ip->check);
+	printf("IP Source Address: %s\n", inet_ntoa(*(struct in_addr *)&ip->saddr));
+	printf("IP Destination Address: %s\n", inet_ntoa(*(struct in_addr *)&ip->daddr));
+}
 // function that listen on given socket for ICMP packet
 int listen_icmp(int sock)
 {
@@ -239,8 +268,15 @@ int listen_icmp(int sock)
 	socklen_t addr_len = sizeof(addr);
 		//ret =  recvmsg(   sock , &msg , MSG_WAITFORONE) ;
 
-	ret = recvfrom(sock, buf, BUFFER_SIZE,MSG_WAITFORONE, (struct sockaddr *)&addr, &addr_len);
+//	ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
 
+
+
+
+	ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
+
+	print_memory( buf  , ret );
+print_ip_header(buf);
 
 
 	printf("message size  %d " ,ret );
@@ -255,8 +291,8 @@ int listen_icmp(int sock)
 	else
 	{
 		printf("officially received %d bytes\n", ret);
-		print_sockaddr_in6(&addr);
-		print_icmp((struct icmp *)buf);
+		print_sockaddr_in(&addr );
+		print_icmp((struct icmp *)buf + 1 );
 
 	}
 
@@ -275,7 +311,7 @@ void get_ttlinfo(int sock)
 	if (ret == -1)
 		perror("getsockopt");
 	else
-		printf("ttl: %d\n", ttl.tv_sec);
+		printf("ttl: %ld\n", ttl.tv_sec);
 }
 
 
@@ -341,10 +377,14 @@ int pinger(char *str )
 
     icp = (struct icmphdr *)packet_buffer;
 
+
+
+
 // 0xf7ff;
 // 0x7FFF;
 // 0xFF7F;
 	init_icp_header(icp);
+	// valud checksum for ipv4 i guess passes valid on wireshark 
 	icp->checksum = 0xFFF7;
 	gettimeofday(&stats.timediff.sent,NULL);
 	int cc = datalen + 8;
@@ -352,16 +392,15 @@ int pinger(char *str )
 
 
 // /int ttl = 12; /* max = 255 */
-  int ttl = 254;
+  int ttl = 3;
  struct timeval tv_out;
     tv_out.tv_sec = 0;//RECV_TIMEOUT;
     tv_out.tv_usec = 0;
 
 	get_ttlinfo(sock);
 
- setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 	setsockopt(sock, SOL_IP, SO_RCVTIMEO,(const char*)&tv_out, sizeof tv_out);
-   setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
+   	setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 
 //);
 
@@ -391,6 +430,6 @@ int pinger(char *str )
 	gettimeofday(&stats.timediff.recieved,NULL);
 	free(packet_buffer);
 	close(sock);
-	print_ligne_intermediaire();
+
 		return(1);
 }

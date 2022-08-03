@@ -51,6 +51,7 @@ void 			init_ping();
 char 			*hostname_to_ipv6(char *hostname);
 struct timeval 	get_time_diff(struct timeval start, struct timeval end);
 
+void  print_ligne_intermediaire(void);
 uint16_t checksum_packet(struct icmphdr *icp);
 
 void init_icp_header(struct icmphdr *icp);
@@ -75,7 +76,7 @@ void init_icp_header(struct icmphdr *icp);
 
 
 
-// macro thet checks endianness of a value and swaps it if necessary
+// macro that checks endianness of a value and swaps it if necessary
 # define ODDBYTE(v)	((unsigned short)(v) << 8)
 // macro that swaps the endianness of a value
 # define SWAP(v)		(((v) >> 8) | ((v) << 8))
@@ -143,6 +144,6 @@ void init_icp_header(struct icmphdr *icp);
 
 /// http://www.faqs.org/rfcs/rfc1071.html  for the checksum calculation
 
-
+//https://geek-university.com/ipv4-header/
 
 		// int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
