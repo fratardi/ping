@@ -62,19 +62,14 @@ void print_sockaddr_in6(struct sockaddr_in6 *addr)
 	printf("sin6_scope_id: %d\n", addr->sin6_scope_id);
 }
 
-
-// returns the checksum of a icmp header
 unsigned short checksum(unsigned short *buf, int nwords)
 {
-	unsigned long sum;
+	unsigned short sum;
 	for (sum = 0; nwords > 0; nwords--)
 		sum += *buf++;
 	sum = (sum >> 16) + (sum & 0xffff);
-	sum += (sum >> 16);
 	return (unsigned short)(~sum);
 }
-
-
 
 
 
@@ -240,18 +235,47 @@ void print_memory(char *mem, int len)
 void print_ip_header(void *ip_header)
 {
 	struct iphdr *ip = ip_header;
+	int i  = 0 ;
+
+
+
 	printf("IP Version: %d\n", ip->version);
 	printf("IP Header Length: %d\n", ip->ihl);
 	printf("IP Type of Service: %d\n", ip->tos);
-	printf("IP Total Length: %d\n", ip->tot_len);
+	printf("IP Total Length: %x\n",  ip->tot_len >> 4);
 	printf("IP ID: %d\n", ip->id);
 	printf("IP Fragment Offset: %d\n", ip->frag_off);
 	printf("IP TTL: %d\n", ip->ttl);
 	printf("IP Protocol: %d\n", ip->protocol);
-	printf("IP Checksum: %d\n", ip->check);
+	printf("IP Checksum: %x\n", ip->check);
+
+	
+
+	while ( i < 12)
+	{
+			printf( " SUM  =? %x\n" , checksum( ip_header ,  i++)  );
+
+		i ++ ;
+	}
+
+
 	printf("IP Source Address: %s\n", inet_ntoa(*(struct in_addr *)&ip->saddr));
 	printf("IP Destination Address: %s\n", inet_ntoa(*(struct in_addr *)&ip->daddr));
 }
+
+
+// ptints the content of an icmphdr
+void print_icmp_header(void *icmp_header)
+{
+	struct icmphdr *icmp = icmp_header;
+	printf("ICMP Type: %d\n", icmp->type);
+	printf("ICMP Code: %d\n", icmp->code);
+	printf("ICMP Checksum: %x\n", icmp->checksum);
+	printf("ICMP Identifier: %d\n", icmp->un.echo.id);
+	printf("ICMP Sequence Number: %d\n", icmp->un.echo.sequence);
+}
+
+
 // function that listen on given socket for ICMP packet
 int listen_icmp(int sock)
 {
@@ -275,8 +299,6 @@ int listen_icmp(int sock)
 
 	ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
 
-	print_memory( buf  , ret );
-print_ip_header(buf);
 
 
 	printf("message size  %d " ,ret );
@@ -291,8 +313,14 @@ print_ip_header(buf);
 	else
 	{
 		printf("officially received %d bytes\n", ret);
-		print_sockaddr_in(&addr );
-		print_icmp((struct icmp *)buf + 1 );
+
+	print_memory( buf  , ret );
+print_ip_header(buf);
+print_icmp_header(buf + sizeof(struct iphdr));
+
+
+	//	print_sockaddr_in(&addr );
+	//	print_icmp((struct icmp *)buf + 1 );
 
 	}
 
@@ -337,7 +365,7 @@ int pinger(char *str )
 	dst		.sin_family = AF_INET;
 	dst		.sin_port 	= htons(NI_MAXHOST);
 
-
+  int ttl =   stats.total_packets;
 
 /// fits all the data about the host in the result struct
 	getaddrinfo(str, NULL, NULL, &result);	
@@ -392,7 +420,7 @@ int pinger(char *str )
 
 
 // /int ttl = 12; /* max = 255 */
-  int ttl = 3;
+
  struct timeval tv_out;
     tv_out.tv_sec = 0;//RECV_TIMEOUT;
     tv_out.tv_usec = 0;
