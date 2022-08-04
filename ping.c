@@ -18,6 +18,22 @@ void handle_sigint(int sig)
 	free (stats.ip);
 	exit(EXIT_SUCCESS);
 }
+
+
+
+
+void handle_sigkill(int sig)
+{
+
+	   #define MAXSTACKSIZE (16)
+    void *stackTraces[MAXSTACKSIZE];
+    size_t size;
+
+    // get void*'s for all entries on the stack
+    size = backtrace(stackTraces, MAXSTACKSIZE);
+}
+
+
 /*
  * @struct timeval get_time_diff(struct timeval start, struct timeval end)
  * @brief calcul de la difference de temps entre deux temps
@@ -100,6 +116,7 @@ void  print_ligne_intermediaire(void)
 int main(int argc , char **argv)
 {
 	signal(SIGINT, handle_sigint);
+//	signal(SIGKILL, handle_sigkill);
 	init_stats(argc,  argv);
 	printf( "IP = [%s]" , stats.ip );
 	if(stats.ip)

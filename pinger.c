@@ -62,14 +62,30 @@ void print_sockaddr_in6(struct sockaddr_in6 *addr)
 	printf("sin6_scope_id: %d\n", addr->sin6_scope_id);
 }
 
-unsigned short checksum(unsigned short *buf, int nwords)
+unsigned short checksum(void *b, int len)
 {
-	unsigned short sum;
-	for (sum = 0; nwords > 0; nwords--)
+	unsigned short *buf = b;
+	unsigned int sum = 0;
+	unsigned short result;
+
+	for ( sum = 0; len > 1; len -= 2)
 		sum += *buf++;
-	sum = (sum >> 16) + (sum & 0xffff);
-	return (unsigned short)(~sum);
+	if (len == 1)
+		sum += *(unsigned char*)buf;
+	sum = (sum >> 16) + (sum & 0xFFFF);
+	sum += (sum >> 16);
+	result = ~sum;
+	return result;
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -106,7 +122,7 @@ void print_icmp(struct icmp *icmp)
 	printf("\n=====================\nREPLY\nICMP_INFOTYPE%d " , 	ICMP_INFOTYPE(icmp->icmp_type));
 	printf("icmp_type: %hhd   \n", icmp->icmp_type   );
 	printf("icmp_code: %d\n", icmp->icmp_code);
-//	printf("REALSUM %hu\n", checksum((unsigned short *)icmp,12));
+	// printf("REALSUM %hu\n", checksum((unsigned short *)icmp,12));
 	printf("icmp_cksum: %hx\n", icmp->icmp_cksum);
 
 	printf("icmp->icmp_pptr: %d\n", icmp->icmp_pptr);
@@ -235,8 +251,8 @@ void print_memory(char *mem, int len)
 void print_ip_header(void *ip_header)
 {
 	struct iphdr *ip = ip_header;
-	int i  = 0 ;
-
+	int i   ;
+	int j = 0;
 
 
 	printf("IP Version: %d\n", ip->version);
@@ -249,19 +265,26 @@ void print_ip_header(void *ip_header)
 	printf("IP Protocol: %d\n", ip->protocol);
 	printf("IP Checksum: %x\n", ip->check);
 
-	
+	// return the checksum of a ipv4 header
 
-	while ( i < 12)
+// while(j<12)
+// {
+i = 0;
+	while ( i < 100)
 	{
-			printf( " SUM  =? %x\n" , checksum( ip_header ,  i++)  );
+		printf( " SUM  =? %x\n" , ip_fast_csum(ip_header , )  );
 
 		i ++ ;
-	}
-
+ 	}
+// 	j++;
+// }
 
 	printf("IP Source Address: %s\n", inet_ntoa(*(struct in_addr *)&ip->saddr));
 	printf("IP Destination Address: %s\n", inet_ntoa(*(struct in_addr *)&ip->daddr));
 }
+
+
+
 
 
 // ptints the content of an icmphdr
@@ -271,6 +294,8 @@ void print_icmp_header(void *icmp_header)
 	printf("ICMP Type: %d\n", icmp->type);
 	printf("ICMP Code: %d\n", icmp->code);
 	printf("ICMP Checksum: %x\n", icmp->checksum);
+
+
 	printf("ICMP Identifier: %d\n", icmp->un.echo.id);
 	printf("ICMP Sequence Number: %d\n", icmp->un.echo.sequence);
 }
@@ -365,7 +390,7 @@ int pinger(char *str )
 	dst		.sin_family = AF_INET;
 	dst		.sin_port 	= htons(NI_MAXHOST);
 
-  int ttl =   stats.total_packets;
+  int ttl =  64;//  stats.total_packets;
 
 /// fits all the data about the host in the result struct
 	getaddrinfo(str, NULL, NULL, &result);	

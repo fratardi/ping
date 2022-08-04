@@ -15,7 +15,7 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <sys/socket.h>
-
+#include <checksum.h>
 #ifndef PINH_H
 #define PING_H
 
