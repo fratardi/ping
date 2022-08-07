@@ -501,7 +501,6 @@ int pinger(char *str )
    	setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 
 
-
 int valer;
 //);
 

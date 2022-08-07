@@ -91,28 +91,6 @@ void  print_ligne_intermediaire(void)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int main(int argc , char **argv)
 {
 	signal(SIGINT, handle_sigint);
