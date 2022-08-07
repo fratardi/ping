@@ -116,7 +116,7 @@ void  print_ligne_intermediaire(void)
 int main(int argc , char **argv)
 {
 	signal(SIGINT, handle_sigint);
-//	signal(SIGKILL, handle_sigkill);
+	signal(SIGTTOU, handle_sigkill);
 	init_stats(argc,  argv);
 	printf( "IP = [%s]" , stats.ip );
 	if(stats.ip)

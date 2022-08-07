@@ -5,6 +5,13 @@
         "ping.h": "c",
         "types.h": "c",
         "socket.h": "c",
-        "features.h": "c"
+        "features.h": "c",
+        "*.tcc": "c",
+        "vector": "c",
+        "exception": "c",
+        "string_view": "c",
+        "functional": "c",
+        "iosfwd": "c",
+        "system_error": "c"
     }
 }

@@ -222,6 +222,10 @@ sock = socket(AF_INET,  SOCK_RAW, IPPROTO_ICMP);
 	return sock;
 }
 
+
+
+
+
 // function that prints the content of an msghdr struct
 void print_msghdr(struct msghdr *msg)
 {
@@ -239,12 +243,37 @@ void print_msghdr(struct msghdr *msg)
 // print memory as hexdump
 void print_memory(char *mem, int len)
 {
+	// hexadecimalbase character string
+	char *hex = "0123456789abcdef";
+
 	int i;
+
+
 	for (i = 0; i < len; i++)
-		printf("%02x ", mem[i]);
+	{
+		if (i % 16 == 0)
+			printf("\n");
+		printf("%c%c ", hex[(mem[i] >> 4) & 0x0f], hex[mem[i] & 0x0f]);
+
+	}	
 	printf("\n");
 }
 
+	// returns the checksum of anipv4 header
+	unsigned short checksum_ipv4(struct ip *ip)
+	{
+		unsigned short *buf = (unsigned short *)ip;
+		unsigned int sum = 0;
+		unsigned short result;
+		int x  = sizeof(struct ip) - sizeof(uint16_t);
+		int i =  0; 
+		for (i = 0; i < x; i++)
+			sum += *buf++;
+		sum = (sum >> 16) + (sum & 0xFFFF);
+		sum += (sum >> 16);
+		result = ~sum;
+		return result;
+	}
 
 
 // printts void  as ip header
@@ -263,6 +292,9 @@ void print_ip_header(void *ip_header)
 	printf("IP Fragment Offset: %d\n", ip->frag_off);
 	printf("IP TTL: %d\n", ip->ttl);
 	printf("IP Protocol: %d\n", ip->protocol);
+
+	printf("IP CHECKING THE SUM ?: %d\n", checksum_ipv4(ip));
+
 	printf("IP Checksum: %x\n", ip->check);
 
 	// return the checksum of a ipv4 header
@@ -270,12 +302,12 @@ void print_ip_header(void *ip_header)
 // while(j<12)
 // {
 i = 0;
-	while ( i < 100)
-	{
-		printf( " SUM  =? %x\n" , ip_fast_csum(ip_header , )  );
+	// while ( i < 100)
+	// {
+	// 	printf( " SUM  =? %x\n" , ip_fast_csum(ip_header , )  );
 
-		i ++ ;
- 	}
+	// 	i ++ ;
+ 	// }
 // 	j++;
 // }
 
@@ -292,7 +324,10 @@ void print_icmp_header(void *icmp_header)
 {
 	struct icmphdr *icmp = icmp_header;
 	printf("ICMP Type: %d\n", icmp->type);
-	printf("ICMP Code: %d\n", icmp->code);
+	if(icmp->type ==  ICMP_TIME_EXCEEDED)
+	printf("CAN NOT REACH DESTINATION\n" );
+	printf("ICMP Code: %d\n",  icmp->code   );
+
 	printf("ICMP Checksum: %x\n", icmp->checksum);
 
 
@@ -315,14 +350,14 @@ int listen_icmp(int sock)
 	char buf[BUFFER_SIZE];
 	struct sockaddr_in addr;
 	socklen_t addr_len = sizeof(addr);
-		//ret =  recvmsg(   sock , &msg , MSG_WAITFORONE) ;
+//		ret =  recvmsg(   sock , &msg , MSG_WAITFORONE) ;
 
 //	ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
 
+//	print_msghdr(&msg);
 
 
-
-	ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
+ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
 
 
 
@@ -339,9 +374,9 @@ int listen_icmp(int sock)
 	{
 		printf("officially received %d bytes\n", ret);
 
-	print_memory( buf  , ret );
-print_ip_header(buf);
-print_icmp_header(buf + sizeof(struct iphdr));
+// 	print_memory(   buf - sizeof(struct iphdr) , ret  +   sizeof(struct iphdr));
+ print_ip_header(buf);
+// print_icmp_header(buf + sizeof(struct iphdr));
 
 
 	//	print_sockaddr_in(&addr );
@@ -390,7 +425,7 @@ int pinger(char *str )
 	dst		.sin_family = AF_INET;
 	dst		.sin_port 	= htons(NI_MAXHOST);
 
-  int ttl =  64;//  stats.total_packets;
+  int ttl =  255; //stats.total_packets;
 
 /// fits all the data about the host in the result struct
 	getaddrinfo(str, NULL, NULL, &result);	
@@ -450,11 +485,24 @@ int pinger(char *str )
     tv_out.tv_sec = 0;//RECV_TIMEOUT;
     tv_out.tv_usec = 0;
 
+	unsigned short defaultparam  = 1;
+	unsigned short unknown  = 65536;
+
 	get_ttlinfo(sock);
 
+	setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO_OLD, "\1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16);
+	setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO_OLD, "\1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16) ;
 	setsockopt(sock, SOL_IP, SO_RCVTIMEO,(const char*)&tv_out, sizeof tv_out);
+	setsockopt(sock, SOL_IP, IP_RECVERR, &defaultparam, sizeof(defaultparam));
+	setsockopt(sock, SOL_IP, IP_RECVTTL, &defaultparam, sizeof(defaultparam));
+	setsockopt(sock, SOL_IP, IP_RETOPTS, &defaultparam, sizeof(defaultparam));
+	setsockopt(3, SOL_SOCKET, SO_RCVBUF, &unknown, sizeof(unknown));
+	setsockopt(sock, SOL_IP, IP_MULTICAST_TTL, &ttl,sizeof(ttl));
    	setsockopt(sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 
+
+
+int valer;
 //);
 
 
