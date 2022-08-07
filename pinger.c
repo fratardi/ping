@@ -265,7 +265,7 @@ void print_memory(char *mem, int len)
 		unsigned short *buf = (unsigned short *)ip;
 		unsigned int sum = 0;
 		unsigned short result;
-		int x  = sizeof(struct ip) - sizeof(uint16_t);
+		int x  = 20;// sizeof(struct ip) - sizeof(uint16_t);
 		int i =  0; 
 		for (i = 0; i < x; i++)
 			sum += *buf++;
@@ -352,15 +352,15 @@ int listen_icmp(int sock)
 	socklen_t addr_len = sizeof(addr);
 //		ret =  recvmsg(   sock , &msg , MSG_WAITFORONE) ;
 
-//	ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
-
-//	print_msghdr(&msg);
-
-
-ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
+	ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
 
 
 
+
+//ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &addr_len);
+//ret = recvmsg(sock,&msg, 0)   ;
+
+	print_msghdr(&msg);
 	printf("message size  %d " ,ret );
 
 		
@@ -389,18 +389,6 @@ ret = recvfrom(sock, buf, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&addr, &a
 	return ret;
 }
 
-// getsthe ttlinfo of a socket
-void get_ttlinfo(int sock)
-{
-	int ret;
-	struct timeval ttl;
-	socklen_t ttl_len = sizeof(ttl);
-	ret = getsockopt(sock, IPPROTO_IP, IP_MULTICAST_TTL , &ttl, &ttl_len);
-	if (ret == -1)
-		perror("getsockopt");
-	else
-		printf("ttl: %ld\n", ttl.tv_sec);
-}
 
 
 
@@ -488,7 +476,6 @@ int pinger(char *str )
 	unsigned short defaultparam  = 1;
 	unsigned short unknown  = 65536;
 
-	get_ttlinfo(sock);
 
 	setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO_OLD, "\1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16);
 	setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO_OLD, "\1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16) ;
@@ -505,7 +492,7 @@ int valer;
 //);
 
 
-	get_ttlinfo(sock);
+
 
 
 	size_t  mch  =   sendto(sock, icp, cc, 8, (struct sockaddr*)&dst, sizeof(dst));
