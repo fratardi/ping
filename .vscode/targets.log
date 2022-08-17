@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Aug  3 00:42:34 2022
+# Make data base, printed on Wed Aug 17 21:19:19 2022
 
 # Variables
 
@@ -24,7 +24,7 @@ DESKTOP_SESSION = ubuntu
 XDG_SESSION_CLASS = user
 # environment
 XDG_SESSION_TYPE = x11
-# makefile (from 'Makefile', line 19)
+# makefile (from 'Makefile', line 18)
 SRCO = $(addprefix $(SRCDIR), $(FUNCTIONS:.c=.o)) $(MAIN:.c=.o)
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
@@ -49,7 +49,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/bin/code
 # environment
-JOURNAL_STREAM = 8:46648
+JOURNAL_STREAM = 8:68019
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -67,7 +67,7 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/home/test/.local/share/flatpak/exports/share:
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 2468
+MANAGERPID = 7318
 # environment
 LC_NAME = fr_FR.UTF-8
 # environment
@@ -83,7 +83,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-SESSION_MANAGER = local/test-MS-7760:@/tmp/.ICE-unix/2825,unix/test-MS-7760:/tmp/.ICE-unix/2825
+SESSION_MANAGER = local/test-MS-7760:@/tmp/.ICE-unix/7551,unix/test-MS-7760:/tmp/.ICE-unix/7551
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -91,7 +91,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = fa1d3975f87c40e39278029fb502d963
+INVOCATION_ID = a849c1e7ddb541f0a1ad509eac87f2cb
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -113,7 +113,7 @@ PWD = /home/test/42/ping
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2779
+SSH_AGENT_PID = 7511
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -132,7 +132,7 @@ LOGNAME = test
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # automatic
 +F = $(notdir $+)
-# makefile (from 'Makefile', line 22)
+# makefile (from 'Makefile', line 21)
 HEADERS = ./ping.h
 # environment
 ZSH = /home/test/.oh-my-zsh
@@ -221,11 +221,11 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/135f08a6_77b3_4e54_b4d4_b519f56b0008
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/ff4aadac_c081_4b22_830b_10efc2b5e269
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.87
+GNOME_TERMINAL_SERVICE = :1.89
 # default
 SUFFIXES := 
 # makefile (from 'Makefile', line 6)
@@ -247,7 +247,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 5070
+VSCODE_PID = 9647
 # variable set hash-table stats:
 # Load=119/1024=12%, Rehash=0, Collisions=24/157=15%
 
@@ -257,14 +257,14 @@ VSCODE_PID = 5070
 
 # Directories
 
-# . (device 2053, inode 4077123): 18 files, no impossibilities.
+# . (device 2053, inode 4077123): 15 files, no impossibilities.
 
-# 18 files, no impossibilities in 1 directories.
+# 15 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 %.o: %.c ping.h
-#  recipe to execute (from 'Makefile', line 25):
+#  recipe to execute (from 'Makefile', line 24):
 	$(COMPILER) $(FLAGS) -o $@ -c $<
 
 # 1 implicit rules, 0 (0.0%) terminal.
@@ -278,20 +278,20 @@ all: ping
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
+ 
 # Load=0/32=0%, Rehash=0, Collisions=0/5=0%
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
- 
-#  Last modified 2022-08-01 04:00:44.365753241
+#  Last modified 2022-08-03 20:44:38.661653005
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 ping.h:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-03 00:42:34.286815604
+#  Last modified 2022-08-04 01:06:13.133616966
 #  File has been updated.
 #  Successfully updated.
 
@@ -305,14 +305,14 @@ fclean: clean
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 43):
+#  recipe to execute (from 'Makefile', line 42):
 	make 
 	$(RM) $(NAME)
 
 print1.o: print1.c ping.h
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'print1'
-#  Last modified 2022-08-03 00:41:56.186717654
+#  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # automatic
@@ -330,10 +330,10 @@ print1.o: print1.c ping.h
 # automatic
 # ^ := print1.c ping.h
 # automatic
-# ? := ping.h
+# ? := print1.c ping.h
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/15=7%
-#  recipe to execute (from 'Makefile', line 25):
+#  recipe to execute (from 'Makefile', line 24):
 	$(COMPILER) $(FLAGS) -o $@ -c $<
 
 # Not a target:
@@ -357,7 +357,7 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 39):
+#  recipe to execute (from 'Makefile', line 38):
 	make 
 	$(RM) $(SRCO)
 
@@ -365,7 +365,7 @@ dbg: ping
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 35):
+#  recipe to execute (from 'Makefile', line 34):
 	$(COMPILER) $(FLAG__DBG) -o $(NAME) $(SRCO)
 
 # Not a target:
@@ -377,12 +377,12 @@ print1.c:
 
 ping: print1.o pinger.o init_ping.o ping.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-03 00:41:56.5187193
+#  Last modified 2022-08-04 00:50:23.009846447
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/5=0%
-#  recipe to execute (from 'Makefile', line 31):
+#  recipe to execute (from 'Makefile', line 30):
 	$(COMPILER) $(FLAGS) $(FLAG__DBG) -o $(NAME) $(SRCO)
 
 # Not a target:
@@ -399,12 +399,12 @@ ping.o:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 30 / storage = 227 B / avg = 7 B
-# current buf: size = 8162 B / used = 227 B / count = 30 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 29 / storage = 215 B / avg = 7 B
+# current buf: size = 8162 B / used = 215 B / count = 29 / avg = 7 B
 
-# strcache performance: lookups = 56 / hit rate = 46%
+# strcache performance: lookups = 53 / hit rate = 45%
 # hash-table stats:
-# Load=30/8192=0%, Rehash=0, Collisions=1/56=2%
-# Finished Make data base on Wed Aug  3 00:42:34 2022
+# Load=29/8192=0%, Rehash=0, Collisions=1/53=2%
+# Finished Make data base on Wed Aug 17 21:19:19 2022
 
  

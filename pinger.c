@@ -246,6 +246,19 @@ void print_memory(char *mem, int len)
 }
 
 
+//  int ip_fast_csum(void *iph, unsigned int ihl)
+// {
+// 	unsigned int sum;
+// while (ihl > 1) {
+// 	sum += *iph++;
+// 	ihl -= 2;
+// }
+// if (ihl == 1)
+// 	sum += *(unsigned char *)iph;
+// sum = (sum & 0xffff) + (sum >> 16);
+// sum = (sum & 0xffff) + (sum >> 16);
+// return ~sum;
+// }
 
 // printts void  as ip header
 void print_ip_header(void *ip_header)
@@ -269,13 +282,13 @@ void print_ip_header(void *ip_header)
 
 // while(j<12)
 // {
-i = 0;
-	while ( i < 100)
-	{
-		printf( " SUM  =? %x\n" , ip_fast_csum(ip_header , )  );
+// i = 0;
+// 	while ( i < 100)
+// 	{
+// 		printf( " SUM  =? %x\n" , ip_fast_csum(ip_header , i)  );
 
-		i ++ ;
- 	}
+// 		i ++ ;
+//  	}
 // 	j++;
 // }
 
