@@ -209,10 +209,9 @@ void get_socketinfo(int sock)
 
 int open_icmp_socket()
 {
-	int sock;
-sock = socket(AF_INET,  SOCK_RAW, IPPROTO_ICMP);
+	int sock = socket(AF_INET,  SOCK_DGRAM, IPPROTO_ICMP);
 
-//sock =	socket(AF_INET, SOCK_RAW, IPPROTO_IP);
+//sock =	socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
 	if (sock == -1)
 		perror("socket");
 
@@ -270,12 +269,12 @@ void print_ip_header(void *ip_header)
 // while(j<12)
 // {
 i = 0;
-	while ( i < 100)
-	{
-		printf( " SUM  =? %x\n" , ip_fast_csum(ip_header , )  );
+	// while ( i < 100)
+	// {
+	// 	printf( " SUM  =? %x\n" , ip_fast_csum(ip_header , )  );
 
-		i ++ ;
- 	}
+	// 	i ++ ;
+ 	// }
 // 	j++;
 // }
 

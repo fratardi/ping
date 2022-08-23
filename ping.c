@@ -22,16 +22,16 @@ void handle_sigint(int sig)
 
 
 
-void handle_sigkill(int sig)
-{
+// void handle_sigkill(int sig)
+// {
 
-	   #define MAXSTACKSIZE (16)
-    void *stackTraces[MAXSTACKSIZE];
-    size_t size;
+// 	   #define MAXSTACKSIZE (16)
+//     void *stackTraces[MAXSTACKSIZE];
+//     size_t size;
 
-    // get void*'s for all entries on the stack
-    size = backtrace(stackTraces, MAXSTACKSIZE);
-}
+//     // get void*'s for all entries on the stack
+//     size = backtrace(stackTraces, MAXSTACKSIZE);
+// }
 
 
 /*
