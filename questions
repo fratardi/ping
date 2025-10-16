@@ -1,0 +1,241 @@
+# FT_PING PROJECT EVALUATION QUESTIONS
+## Deep Technical Questions About Implementation and Concepts
+
+---
+
+## ICMP PROTOCOL & NETWORKING (15 questions)
+
+1. Why does the ICMP echo request use `IPPROTO_ICMP` instead of `IPPROTO_UDP` or `IPPROTO_TCP`?
+
+2. Explain why a raw socket (`SOCK_RAW`) is required for implementing ping. What would happen if you tried to use `SOCK_DGRAM`?
+
+3. In the ICMP header structure, what is the purpose of the checksum field and why must it be calculated after the packet is assembled?
+
+4. Why is the process ID (`getpid()`) masked with `0xFFFF` when setting the ICMP echo ID? What problem does this prevent?
+
+5. Explain the difference between the IP header's TTL field and the ICMP echo's sequence number. How does each serve a different purpose?
+
+6. When receiving an ICMP packet, why do we need to extract and calculate `ip_header_len` before accessing the ICMP header?
+
+7. What is the significance of `IP_TTL` sockopt and how does decreasing TTL help test network topology?
+
+8. Explain why ICMP Time Exceeded messages contain the original IP header and first 8 bytes of the original datagram.
+
+9. What is the difference between ICMP Type 3 (Destination Unreachable) and Type 11 (Time Exceeded)? When would each occur?
+
+10. Why does the verbose mode extract "inner" IP and ICMP headers from error messages? What information do they provide?
+
+11. Explain the purpose of the 56-byte data payload in a ping packet. Why not just send the header?
+
+12. What happens if two processes on the same machine simultaneously send ICMP echo requests? How does the kernel differentiate responses?
+
+13. Why must the ICMP checksum be set to 0 before calculation, then filled in afterward?
+
+14. Explain the one's complement sum algorithm used in `calculate_checksum()`. Why use one's complement instead of two's complement?
+
+15. What is the purpose of the `(sum >> 16) + (sum & 0xFFFF)` operation in the checksum calculation?
+
+---
+
+## SOCKET PROGRAMMING & SYSTEM CALLS (12 questions)
+
+16. Why does `setsockopt()` with `SO_RCVTIMEO` use a `struct timeval` instead of a simple integer?
+
+17. Explain the consequences of not setting `SO_RCVTIMEO`. How would the program behavior change?
+
+18. In `sendto()`, why do we pass `sizeof(*addr)` for the address length parameter?
+
+19. What is the difference between `send()` and `sendto()` for sockets? Why does this implementation use `sendto()`?
+
+20. Explain why `recvfrom()` can return -1 with `errno` set to `EAGAIN` or `EWOULDBLOCK`. Are these always errors?
+
+21. Why does the `receive_ping()` function use a `while(1)` loop? What condition breaks this loop?
+
+22. What would happen if you forgot to call `close(sockfd)` before exiting? Is this a serious issue?
+
+23. Explain the purpose of the `addr_len` parameter in `recvfrom()`. Why is it a pointer?
+
+24. Why does the code check `if (geteuid() != 0)` instead of `if (getuid() != 0)`?
+
+25. What kernel capability is required to create raw sockets? Could you run this without root by setting capabilities?
+
+26. Why is the socket family set to `AF_INET` instead of `AF_UNSPEC`? What would change for IPv6 support?
+
+27. Explain the buffer size of 1024 bytes in `receive_ping()`. Is this adequate? What could go wrong if it's too small?
+
+---
+
+## STATISTICS & RTT CALCULATION (10 questions)
+
+28. Explain why RTT is calculated as `(tv_recv - tv_sent) * 1000.0` instead of just the difference in seconds.
+
+29. In the standard deviation calculation, what is the mathematical purpose of `sum_sq_rtt`?
+
+30. Why is `g_stats.min_rtt` initialized to 999999.0 instead of 0.0?
+
+31. The formula `(sum_sq_rtt / packets_received) - (avg_rtt * avg_rtt)` calculates variance. Explain why this works.
+
+32. What happens to the statistics if a packet times out? Why is `packets_received` not incremented?
+
+33. Explain why `sqrt()` is used in the deviation calculation. What would the value represent without the square root?
+
+34. Why does the code check `deviation > 0 ? deviation : 0` before taking the square root?
+
+35. If you receive packets out of order, how would the statistics be affected? Does this implementation handle that?
+
+36. The timestamp is embedded in the packet payload. Why not just record the send time in a local variable?
+
+37. Explain the precision difference between using `gettimeofday()` vs `time()` for RTT measurement.
+
+---
+
+## MEMORY MANAGEMENT & DATA STRUCTURES (10 questions)
+
+38. Why is `g_stats` declared as a global variable instead of being passed as a parameter?
+
+39. Identify the memory leak in the `resolve_hostname()` function. Where should `free()` be called?
+
+40. Why is `g_running` declared as `volatile sig_atomic_t` instead of just `int`?
+
+41. Explain the purpose of `memset(&g_stats, 0, sizeof(g_stats))` in `init_g_stats()`.
+
+42. Why does `strdup()` allocate heap memory? What would be wrong with returning a pointer to a local char array?
+
+43. The packet structure uses a flexible array for `msg`. Why not just use `char msg[56]`?
+
+44. Explain why `t_ping_packet` is defined as a struct instead of manually calculating offsets.
+
+45. What happens if `malloc()` fails in `strdup()`? Does the code handle this?
+
+46. Why is `addr` in `receive_ping()` allocated on the stack instead of dynamically?
+
+47. Explain the purpose of padding in struct `s_ping_packet`. How does it affect memory layout?
+
+---
+
+## SIGNAL HANDLING & CONCURRENCY (8 questions)
+
+48. Why can't we simply set `g_running = 0` from the signal handler without the `volatile` keyword?
+
+49. Explain what could go wrong if `signal_handler()` tried to call `printf()` or `malloc()`.
+
+50. Why is `sig_atomic_t` used for `g_running`? What guarantees does this type provide?
+
+51. What would happen if SIGINT was received during `sendto()` or `recvfrom()`? How is this handled?
+
+52. Could you safely call `print_stats()` from inside the signal handler? Why or why not?
+
+53. What race condition could occur if the signal arrives between checking `g_running` and calling `usleep()`?
+
+54. Why doesn't the code block signals during critical sections?
+
+55. Explain what happens to pending packets if you press Ctrl+C during execution.
+
+---
+
+## ARGUMENT PARSING & ERROR HANDLING (8 questions)
+
+56. Why does `parse_args()` use `exit(1)` instead of returning an error code?
+
+57. Explain the order dependency: why is `init_g_stats()` called before `parse_args()`?
+
+58. What happens if you pass `-c -5` to the program? Is this properly validated?
+
+59. Why does the code use `atoi()` and `atof()` instead of `strtol()` and `strtod()`?
+
+60. What input validation is missing from the `-i` interval option? What edge cases aren't handled?
+
+61. If the user provides multiple hostnames, how does the parser handle it?
+
+62. Why does `print_usage()` call `exit(1)` instead of returning to `main()`?
+
+63. Explain why `strcmp(argv[i], "-v")` requires exact match. What about `--verbose`?
+
+---
+
+## DNS RESOLUTION & ADDRESS HANDLING (7 questions)
+
+64. Why use `getaddrinfo()` instead of the deprecated `gethostbyname()`?
+
+65. Explain the purpose of setting `flags.ai_family = AF_INET` in the hints structure.
+
+66. What does `freeaddrinfo()` free? Why is it necessary?
+
+67. If a hostname resolves to multiple IP addresses, which one gets used? Why?
+
+68. Why check `rp->ai_family == AF_INET` in the loop if we already set it in hints?
+
+69. Explain what `inet_ntoa()` does and why it's used instead of `inet_ntop()`.
+
+70. What would break if the DNS server is unreachable? Is there a timeout?
+
+---
+
+## CODE ARCHITECTURE & DESIGN (5 questions)
+
+71. Why is the packet initialization separated into its own function `init_packet()`?
+
+72. Explain the design decision to separate `process_valid_icmp_echo_reply()` from `receive_ping()`.
+
+73. Could the verbose error handling code be refactored to reduce duplication? How?
+
+74. Why doesn't the code use a packet queue to handle multiple outstanding requests?
+
+75. Explain the trade-off of using global variables vs passing context structures as parameters.
+
+---
+
+## PROTOCOL EDGE CASES & SECURITY (5 questions)
+
+76. What happens if an attacker sends forged ICMP replies with matching sequence numbers?
+
+77. Why doesn't the code validate that the response IP matches the destination IP?
+
+78. What would happen if the received packet is smaller than the minimum ICMP packet size?
+
+79. Could ping be used for covert channel communication? How does the payload pattern help detect this?
+
+80. Explain why running ping as setuid root is dangerous. What attack vectors exist?
+
+---
+
+## BONUS FEATURES & EXTENSIONS (5 questions)
+
+81. How would you implement the `-f` (flood) option? What challenges would arise?
+
+82. Explain how to add support for IPv6 (`ICMP6_ECHO_REQUEST`). What would change?
+
+83. How would you implement the `-w` deadline option to stop after a specific time?
+
+84. What would be required to add the `-p` pattern option to specify payload content?
+
+85. How could you implement traceroute functionality using this codebase?
+
+---
+
+## TESTING & DEBUGGING (5 questions)
+
+86. How would you test the timeout handling without waiting for actual timeouts?
+
+87. What tools could you use to verify the ICMP checksum is calculated correctly?
+
+88. How would you debug why packets are being lost on a local network?
+
+89. What is the significance of the ±30ms tolerance mentioned in the subject? When would it matter?
+
+90. How could you unit test the `calculate_checksum()` function?
+
+---
+
+## TOTAL: 90 CHALLENGING QUESTIONS
+
+These questions require deep understanding of:
+- Network protocols (ICMP, IP)
+- System programming (signals, sockets, privileges)
+- C programming (memory management, data structures)
+- Statistics and mathematics
+- Security considerations
+- Software architecture
+- Linux/UNIX system calls
+
+Answers require explaining WHY, not just WHAT, demonstrating true comprehension.

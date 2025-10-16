@@ -23,25 +23,25 @@
 #define DEFAULT_TTL 64
 
 typedef struct s_ping_packet {
-        struct icmphdr  header;
-        char            msg[PACKET_SIZE - sizeof(struct icmphdr)];
+		struct icmphdr  header;
+		char            msg[PACKET_SIZE - sizeof(struct icmphdr)];
 }              t_ping_packet;
 
 typedef struct      s_ping_stats {
-    char            *hostname;
-    char            *ip_addr;
-    // stats 
-    unsigned int    packets_sent;
-    unsigned int    packets_received;
-    double          min_rtt;             // return time stats  
-    double          max_rtt;             //
-    double          sum_rtt;             //
-    double          sum_sq_rtt;          //
-    struct timeval  start_time;         //def @ init
-    int             ttl;                    // ttl
-    int             count;                  //num of packet (0 == infinite)
-    double          interval;            // Delay between packets in seconds
-    int             verbose;             // verbose mode for -v option
+	char            *hostname;
+	char            *ip_addr;
+	// stats 
+	unsigned int    packets_sent;
+	unsigned int    packets_received;
+	double          min_rtt;             // return time stats  
+	double          max_rtt;             //
+	double          sum_rtt;             //
+	double          sum_sq_rtt;          //
+	struct timeval  start_time;         //def @ init
+	int             ttl;                    // ttl
+	int             count;                  //num of packet (0 == infinite)
+	double          interval;            // Delay between packets in seconds
+	int             verbose;             // verbose mode for -v option
 }                   t_ping_stats;
 
 extern          t_ping_stats g_stats;
@@ -58,5 +58,7 @@ unsigned short  calculate_checksum(void *b, int len);
 void            print_stats(void);
 void            init_g_stats(int argc, char **argv);
 void            init_packet(int seq, t_ping_packet *packet);
+int             verbose_handler(char *buffer, int ip_header_len, 
+					struct icmphdr *icmp_hdr, struct sockaddr_in *addr, int seq);
 
 #endif

@@ -55,8 +55,8 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Check if ping binary exists
-if [ ! -f "./ping" ]; then
-    echo -e "${RED}Error: ./ping binary not found. Run 'make' first.${NC}"
+if [ ! -f "./ft_ping" ]; then
+    echo -e "${RED}Error: ./ft_ping binary not found. Run 'make' first.${NC}"
     exit 1
 fi
 
@@ -66,22 +66,22 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 
 # Test 1: Basic ping to IP
 print_test "Basic ping to IP address (8.8.8.8)"
-timeout 3 ./ping 8.8.8.8 | head -5
+timeout 3 ./ft_ping 8.8.8.8 | head -5
 check_result
 
 # Test 2: Ping to hostname
 print_test "Ping to hostname (google.com)"
-timeout 3 ./ping google.com | head -5
+timeout 3 ./ft_ping google.com | head -5
 check_result
 
 # Test 3: Ping to localhost
 print_test "Ping to localhost (127.0.0.1)"
-timeout 2 ./ping 127.0.0.1 | head -5
+timeout 2 ./ft_ping 127.0.0.1 | head -5
 check_result
 
 # Test 4: Ping with statistics display
 print_test "Statistics display (Ctrl+C simulation)"
-(./ping 8.8.8.8 & PID=$!; sleep 2; kill -INT $PID; wait $PID 2>/dev/null)
+(./ft_ping 8.8.8.8 & PID=$!; sleep 2; kill -INT $PID; wait $PID 2>/dev/null)
 check_result
 
 echo -e "\n${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -90,17 +90,17 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 
 # Test 5: Count option with 3 packets
 print_test "Send exactly 3 packets (-c 3)"
-./ping -c 3 8.8.8.8
+./ft_ping -c 3 8.8.8.8
 check_result
 
 # Test 6: Count option with 1 packet
 print_test "Send exactly 1 packet (-c 1)"
-./ping -c 1 8.8.8.8
+./ft_ping -c 1 8.8.8.8
 check_result
 
 # Test 7: Count option with 10 packets
 print_test "Send exactly 10 packets (-c 10)"
-./ping -c 10 127.0.0.1
+./ft_ping -c 10 127.0.0.1
 check_result
 
 echo -e "\n${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -109,17 +109,17 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 
 # Test 8: Fast interval (0.2 seconds)
 print_test "Fast interval 0.2s (-i 0.2)"
-timeout 2 ./ping -i 0.2 127.0.0.1 | head -8
+timeout 2 ./ft_ping -i 0.2 127.0.0.1 | head -8
 check_result
 
 # Test 9: Slow interval (2 seconds)
 print_test "Slow interval 2s (-i 2)"
-timeout 5 ./ping -i 2 127.0.0.1 | head -5
+timeout 5 ./ft_ping -i 2 127.0.0.1 | head -5
 check_result
 
 # Test 10: Very fast interval (0.1 seconds)
 print_test "Very fast interval 0.1s (-i 0.1)"
-timeout 2 ./ping -i 0.1 127.0.0.1 | head -10
+timeout 2 ./ft_ping -i 0.1 127.0.0.1 | head -10
 check_result
 
 echo -e "\n${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -128,22 +128,22 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 
 # Test 11: TTL=1 (should get Time Exceeded)
 print_test "TTL=1 to remote host (expect Time Exceeded)"
-timeout 3 ./ping -ttl 1 8.8.8.8 | head -5
+timeout 3 ./ft_ping -ttl 1 8.8.8.8 | head -5
 check_result
 
 # Test 12: TTL=1 to localhost (should work)
 print_test "TTL=1 to localhost (should succeed)"
-./ping -c 2 -ttl 1 127.0.0.1
+./ft_ping -c 2 -ttl 1 127.0.0.1
 check_result
 
 # Test 13: TTL=64 (default)
 print_test "TTL=64 (normal operation)"
-./ping -c 2 -ttl 64 8.8.8.8
+./ft_ping -c 2 -ttl 64 8.8.8.8
 check_result
 
 # Test 14: TTL=255 (maximum)
 print_test "TTL=255 (maximum value)"
-./ping -c 2 -ttl 255 8.8.8.8
+./ft_ping -c 2 -ttl 255 8.8.8.8
 check_result
 
 echo -e "\n${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -152,22 +152,22 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 
 # Test 15: -c and -i combined
 print_test "Combined: -c 5 -i 0.3"
-./ping -c 5 -i 0.3 127.0.0.1
+./ft_ping -c 5 -i 0.3 127.0.0.1
 check_result
 
 # Test 16: -c and -ttl combined
 print_test "Combined: -c 3 -ttl 100"
-./ping -c 3 -ttl 100 8.8.8.8
+./ft_ping -c 3 -ttl 100 8.8.8.8
 check_result
 
 # Test 17: -i and -ttl combined
 print_test "Combined: -i 0.5 -ttl 128"
-timeout 2 ./ping -i 0.5 -ttl 128 127.0.0.1 | head -5
+timeout 2 ./ft_ping -i 0.5 -ttl 128 127.0.0.1 | head -5
 check_result
 
 # Test 18: All options combined
 print_test "Combined: -c 5 -i 0.4 -ttl 64"
-./ping -c 5 -i 0.4 -ttl 64 8.8.8.8
+./ft_ping -c 5 -i 0.4 -ttl 64 8.8.8.8
 check_result
 
 echo -e "\n${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -175,37 +175,37 @@ echo -e "${YELLOW}  ERROR HANDLING TESTS${NC}"
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
 # Test 19: No arguments
-expect_fail "No arguments (should fail)" "./ping"
+expect_fail "No arguments (should fail)" "./ft_ping"
 
 # Test 20: Invalid TTL (too high)
-expect_fail "Invalid TTL=300 (should fail)" "./ping -ttl 300 8.8.8.8"
+expect_fail "Invalid TTL=300 (should fail)" "./ft_ping -ttl 300 8.8.8.8"
 
 # Test 21: Invalid TTL (zero)
-expect_fail "Invalid TTL=0 (should fail)" "./ping -ttl 0 8.8.8.8"
+expect_fail "Invalid TTL=0 (should fail)" "./ft_ping -ttl 0 8.8.8.8"
 
 # Test 22: Invalid count (zero)
-expect_fail "Invalid count=0 (should fail)" "./ping -c 0 8.8.8.8"
+expect_fail "Invalid count=0 (should fail)" "./ft_ping -c 0 8.8.8.8"
 
 # Test 23: Invalid count (negative)
-expect_fail "Invalid count=-1 (should fail)" "./ping -c -1 8.8.8.8"
+expect_fail "Invalid count=-1 (should fail)" "./ft_ping -c -1 8.8.8.8"
 
 # Test 24: Invalid interval (negative)
-expect_fail "Invalid interval=-1 (should fail)" "./ping -i -1 8.8.8.8"
+expect_fail "Invalid interval=-1 (should fail)" "./ft_ping -i -1 8.8.8.8"
 
 # Test 25: Non-existent host
-expect_fail "Non-existent host (should fail)" "./ping nonexistent.invalid.host"
+expect_fail "Non-existent host (should fail)" "./ft_ping nonexistent.invalid.host"
 
 # Test 26: Invalid option
-expect_fail "Invalid option -x (should fail)" "./ping -x 8.8.8.8"
+expect_fail "Invalid option -x (should fail)" "./ft_ping -x 8.8.8.8"
 
 # Test 27: Missing option argument (-c)
-expect_fail "Missing argument for -c (should fail)" "./ping -c"
+expect_fail "Missing argument for -c (should fail)" "./ft_ping -c"
 
 # Test 28: Missing option argument (-i)
-expect_fail "Missing argument for -i (should fail)" "./ping -i"
+expect_fail "Missing argument for -i (should fail)" "./ft_ping -i"
 
 # Test 29: Missing option argument (-ttl)
-expect_fail "Missing argument for -ttl (should fail)" "./ping -ttl"
+expect_fail "Missing argument for -ttl (should fail)" "./ft_ping -ttl"
 
 echo -e "\n${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${YELLOW}  EDGE CASES TESTS${NC}"
@@ -213,15 +213,15 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 
 # Test 30: Very large count
 print_test "Large count -c 100"
-timeout 5 ./ping -c 100 -i 0.01 127.0.0.1 | tail -5
+timeout 5 ./ft_ping -c 100 -i 0.01 127.0.0.1 | tail -5
 check_result
 
 # Test 31: Multiple hosts (should fail - too many args)
-expect_fail "Multiple destinations (should fail)" "./ping 8.8.8.8 1.1.1.1"
+expect_fail "Multiple destinations (should fail)" "./ft_ping 8.8.8.8 1.1.1.1"
 
 # Test 32: IP address format
 print_test "IPv4 address format (192.168.1.1)"
-timeout 2 ./ping -c 1 192.168.1.1 2>&1 | head -3
+timeout 2 ./ft_ping -c 1 192.168.1.1 2>&1 | head -3
 # This might fail if address is unreachable, so we just run it
 echo -e "${BLUE}(Address may be unreachable - test completed)${NC}"
 TESTS_PASSED=$((TESTS_PASSED + 1))
@@ -233,7 +233,7 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 
 # Test 33: Verify packet count in statistics
 print_test "Verify packet count accuracy"
-OUTPUT=$(./ping -c 5 127.0.0.1)
+OUTPUT=$(./ft_ping -c 5 127.0.0.1)
 echo "$OUTPUT"
 if echo "$OUTPUT" | grep -q "5 packets transmitted, 5 packets received"; then
     echo -e "${GREEN}✓ PASS - Packet counts match${NC}"
@@ -245,7 +245,7 @@ fi
 
 # Test 34: Verify 0% packet loss for localhost
 print_test "Verify 0% packet loss for localhost"
-OUTPUT=$(./ping -c 5 127.0.0.1)
+OUTPUT=$(./ft_ping -c 5 127.0.0.1)
 if echo "$OUTPUT" | grep -q "0.0% packet loss"; then
     echo -e "${GREEN}✓ PASS - 0% packet loss${NC}"
     TESTS_PASSED=$((TESTS_PASSED + 1))
@@ -256,7 +256,7 @@ fi
 
 # Test 35: Verify statistics format (min/avg/max/stddev)
 print_test "Verify statistics format"
-OUTPUT=$(./ping -c 3 127.0.0.1)
+OUTPUT=$(./ft_ping -c 3 127.0.0.1)
 if echo "$OUTPUT" | grep -q "round-trip min/avg/max/stddev"; then
     echo -e "${GREEN}✓ PASS - Statistics format correct${NC}"
     TESTS_PASSED=$((TESTS_PASSED + 1))

@@ -2,6 +2,14 @@
     "files.associations": {
         "ping.h": "c",
         "time.h": "c",
-        "errno.h": "c"
+        "errno.h": "c",
+        "*.c": "c",
+        "*.h": "c"
+    },
+    "[c]": {
+        "editor.tabSize": 4
+    },
+    "[cpp]": {
+        "editor.tabSize": 4
     }
 }
