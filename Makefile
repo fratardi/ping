@@ -9,12 +9,11 @@ FLAG__DBG = # -fsanitize=address
 
 SRCDIR = #./src/
 
-COMPILER = clang
+COMPILER = gcc
 
 RM = /bin/rm -rf
 
-FUNCTIONS = print1.c   pinger.c #addtochain.c buffconvert.c parse_file.c \
-			#ft_display.c ft_intarrop.c ft_solve.c
+FUNCTIONS = print1.c pinger.c init_ping.c utils.c network.c
 
 SRCO = $(addprefix $(SRCDIR), $(FUNCTIONS:.c=.o)) \
 		$(MAIN:.c=.o)

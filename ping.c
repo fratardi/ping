@@ -27,33 +27,6 @@ void handle_sigint(int sig)
 * */
 
 
-uint16_t checksum_packet(struct icmphdr *icp)
-{
-	uint16_t *addr = (uint16_t *)icp;
-	int len = sizeof(struct icmphdr) + sizeof(struct timeval);
-	int sum = 0;
-	int nleft = len;
-	while (nleft > 1) {
-		sum += *addr++;
-		nleft -= 2;
-	}
-	if (nleft == 1)
-		sum += *(unsigned char *)addr;
-	sum = (sum >> 16) + (sum & 0xffff);
-	sum += (sum >> 16);
-	return (uint16_t)~sum;
-}
-
-
-
-
-#include <sys/uio.h>
-#include <sys/socket.h>
-
-
-/*
- * Checksum routine for ICMP packets.
- * */
 
 void init_stats(int argc , char **argv)
 {
