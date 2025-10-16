@@ -1,4 +1,4 @@
-NAME = ping
+NAME = ft_ping
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
