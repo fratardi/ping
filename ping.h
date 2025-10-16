@@ -14,8 +14,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <errno.h>
+#include <errno.h> // recv ret err
 #include <time.h>
+#include <math.h>
 
 #define PACKET_SIZE 64
 #define RECV_TIMEOUT 1
@@ -55,5 +56,6 @@ int             receive_ping(int sockfd, int seq);
 unsigned short  calculate_checksum(void *b, int len);
 void            print_stats(void);
 void            init_g_stats(int argc, char **argv);
+void            init_packet(int seq, t_ping_packet *packet);
 
 #endif

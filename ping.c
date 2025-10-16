@@ -9,13 +9,6 @@ void signal_handler(int sig) {
     g_running = 0;
 }
 
-void print_usage(void) {
-    printf( "Usage: ./ping [-c count] [-i interval] [-ttl N] destination\n");
-    printf( "  -c count      Stop after sending count packets\n");
-    printf( "  -i interval   Wait interval seconds between sending each packet (default: 1.0)\n");
-    printf( "  -ttl N        Set Time To Live (1-255)\n");
-    exit(1);
-}
 
 int main(int argc, char **argv) {
     int                 sockfd;
@@ -25,7 +18,7 @@ int main(int argc, char **argv) {
     count = 0;
     if (geteuid() != 0) {
         printf( "ft_ping: Lacking privilege for raw socket.\n");
-        return 1;
+        return -1;
     }
     init_g_stats(argc,  argv);
     parse_args(argc, argv);
@@ -33,34 +26,26 @@ int main(int argc, char **argv) {
     g_stats.ip_addr = resolve_hostname(g_stats.hostname);
     if (g_stats.ip_addr == NULL) {
         printf( "ft_ping: unknown host %s\n", g_stats.hostname);
-        return 1;
+        return -1;
     }
     // init sock
     sockfd = create_icmp_socket();
     if (sockfd < 0) {
-        return 1;
+        return -1;
     }
     // Set TTL
     if (setsockopt(sockfd, IPPROTO_IP, IP_TTL, &g_stats.ttl, sizeof(g_stats.ttl)) != 0) {
         printf("%s","setsockopt");
         close(sockfd);
-        return 1;
+        return -1;
     }
     // Setup destination address
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = inet_addr(g_stats.ip_addr);
-
-    // Setup signal handler
     signal(SIGINT, signal_handler);
-
-    // Print start message
-    printf("PING %s (%s): %d data bytes\n", 
-           g_stats.hostname, g_stats.ip_addr, PACKET_SIZE - 8);
-
+    printf("PING %s (%s): %d data bytes\n", g_stats.hostname, g_stats.ip_addr, PACKET_SIZE - 8);
     gettimeofday(&g_stats.start_time, NULL);
-
-
     while (g_running && (g_stats.count == 0 || count < g_stats.count)) {
         send_ping(sockfd, &addr, count);
         if (receive_ping(sockfd, count) == 0) {
@@ -73,9 +58,7 @@ int main(int argc, char **argv) {
             usleep((unsigned int)(g_stats.interval * 1000000));
         }
     }
-
     close(sockfd);
     print_stats();
-
     return 0;
 }

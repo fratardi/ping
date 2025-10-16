@@ -37,7 +37,7 @@ int create_icmp_socket(void) {
 
     sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (sockfd < 0) {
-        perror("socket");
+        printf("%s","socket");
         return -1;
     }
 
@@ -45,7 +45,7 @@ int create_icmp_socket(void) {
     tv_out.tv_sec = RECV_TIMEOUT;
     tv_out.tv_usec = 0;
     if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv_out, sizeof(tv_out)) < 0) {
-        perror("setsockopt");
+        printf("%s","setsockopt");
         close(sockfd);
         return -1;
     }
@@ -58,31 +58,13 @@ int create_icmp_socket(void) {
 
 void send_ping(int sockfd, struct sockaddr_in *addr, int seq) {
     t_ping_packet   packet;
-    struct timeval  tv;
     int             ret;
 
-    memset(&packet, 0, sizeof(packet));
-    // setup icmp header
-    packet.header.type = ICMP_ECHO;
-    packet.header.code = 0;
-    packet.header.un.echo.id = getpid() & 0xFFFF;  // Use only lower 16 bits
-    packet.header.un.echo.sequence = seq;
-    packet.header.checksum = 0;
-    // add timestamp to payload
-    gettimeofday(&tv, NULL);
-    memcpy(packet.msg, &tv, sizeof(tv));
-    // fill rest of payload with pattern
-    size_t i = sizeof(tv);
-    while (i < sizeof(packet.msg)) {
-        packet.msg[i] = i;
-        i++;
-    }
-    packet.header.checksum = calculate_checksum(&packet, sizeof(packet));
-    // Send packet
+    init_packet(seq, &packet);
     ret = sendto(sockfd, &packet, sizeof(packet), 0,
                  (struct sockaddr *)addr, sizeof(*addr));
     if (ret < 0) {
-        perror("sendto");
+        printf("%s","sendto");
     } else {
         g_stats.packets_sent++;
     }
@@ -106,11 +88,12 @@ int receive_ping(int sockfd, int seq) {
         ret = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *)&addr, &addr_len);
         gettimeofday(&tv_recv, NULL);
         if (ret < 0) {
+            //recvfrom return
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 printf("Request timeout for icmp_seq %d\n", seq);
                 return -1;
             }
-            perror("recvfrom");
+            printf("%s","recvfrom");
             return -1;
         }
         //handle header + packet

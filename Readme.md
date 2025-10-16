@@ -1,0 +1,1 @@
+set uid 0 for program

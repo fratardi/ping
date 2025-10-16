@@ -1,8 +1,8 @@
 NAME = ping
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3
-LDFLAGS = -lm
+CFLAGS = -Wall -Wextra -Werror
+LDFLAGS = -lm # library linking for math.h
 
 SRCS = parser.c ping.c init.c network.c utils.c 
 OBJS = $(SRCS:.c=.o)

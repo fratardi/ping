@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "ping.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "errno.h": "c"
     }
 }
