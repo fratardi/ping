@@ -6,9 +6,14 @@ int parse_args(int argc, char **argv) {
     g_stats.count = 0;      // 0 == inf
     g_stats.interval = 1.0; // Default 1 second
     g_stats.hostname = NULL;
+    g_stats.verbose = 0;    // Default not verbose
 
     while (i < argc) {
-        if (strcmp(argv[i], "-ttl") == 0) {
+        if (strcmp(argv[i], "-v") == 0) {
+            g_stats.verbose = 1;
+        } else if (strcmp(argv[i], "-?") == 0) {
+            print_usage();
+        } else if (strcmp(argv[i], "-ttl") == 0) {
             if (i + 1 >= argc) {
                 printf("ft_ping: option requires an argument -- 'ttl'\n");
                 print_usage();

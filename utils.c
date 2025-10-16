@@ -1,5 +1,4 @@
 #include "ping.h"
-#include <math.h>
 
 unsigned short calculate_checksum(void *packet, int len) {
     unsigned int    sum ;
@@ -42,7 +41,10 @@ void print_stats(void) {
 }
 
 void print_usage(void) {
-    printf( "Usage: ./ping [-c count] [-i interval] [-ttl N] destination\n");
+    printf( "Usage: ./ft_ping [-v] [-?] [-c count] [-i interval] [-ttl N] destination\n");
+    printf( "Options:\n");
+    printf( "  -v            Verbose output (show packet errors)\n");
+    printf( "  -?            Display this help message\n");
     printf( "  -c count      Stop after sending count packets\n");
     printf( "  -i interval   Wait interval seconds between sending each packet (default: 1.0)\n");
     printf( "  -ttl N        Set Time To Live (1-255)\n");

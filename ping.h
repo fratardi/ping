@@ -41,6 +41,7 @@ typedef struct      s_ping_stats {
     int             ttl;                    // ttl
     int             count;                  //num of packet (0 == infinite)
     double          interval;            // Delay between packets in seconds
+    int             verbose;             // verbose mode for -v option
 }                   t_ping_stats;
 
 extern          t_ping_stats g_stats;

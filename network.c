@@ -40,7 +40,6 @@ int create_icmp_socket(void) {
         printf("%s","socket");
         return -1;
     }
-
     // Set receive timeout
     tv_out.tv_sec = RECV_TIMEOUT;
     tv_out.tv_usec = 0;
@@ -49,12 +48,8 @@ int create_icmp_socket(void) {
         close(sockfd);
         return -1;
     }
-
     return sockfd;
 }
-
-
-
 
 void send_ping(int sockfd, struct sockaddr_in *addr, int seq) {
     t_ping_packet   packet;
@@ -102,9 +97,11 @@ int receive_ping(int sockfd, int seq) {
         icmp_hdr = (struct icmphdr *)(buffer + ip_header_len);
         // TTL too long
         if (icmp_hdr->type == ICMP_TIME_EXCEEDED) {
-            char router_ip[INET_ADDRSTRLEN];
-            inet_ntop(AF_INET, &(ip_hdr->saddr), router_ip, INET_ADDRSTRLEN);
-            printf("From %s icmp_seq=%d Time to live exceeded\n", router_ip, seq);
+            if (g_stats.verbose) {
+                char router_ip[INET_ADDRSTRLEN];
+                inet_ntop(AF_INET, &(ip_hdr->saddr), router_ip, INET_ADDRSTRLEN);
+                printf("From %s icmp_seq=%d Time to live exceeded\n", router_ip, seq);
+            }
             return -1;
         }
         // Check icmp hdr is the reply and matches our pid 

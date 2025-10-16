@@ -11,6 +11,7 @@ void init_g_stats(int argc, char **argv )
     g_stats.sum_sq_rtt = 0.0;
     g_stats.packets_sent = 0;
     g_stats.packets_received = 0;
+    g_stats.verbose = 0;
 }
 
 void init_packet(int seq, t_ping_packet *packet)

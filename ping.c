@@ -16,19 +16,18 @@ int main(int argc, char **argv) {
     int                 count ;
     
     count = 0;
-    if (geteuid() != 0) {
-        printf( "ft_ping: Lacking privilege for raw socket.\n");
-        return -1;
-    }
     init_g_stats(argc,  argv);
     parse_args(argc, argv);
-    // Host res 
+    
+    if (geteuid() != 0) {
+        printf( "Need euid == 0\n");
+        return -1;
+    }
     g_stats.ip_addr = resolve_hostname(g_stats.hostname);
     if (g_stats.ip_addr == NULL) {
         printf( "ft_ping: unknown host %s\n", g_stats.hostname);
         return -1;
     }
-    // init sock
     sockfd = create_icmp_socket();
     if (sockfd < 0) {
         return -1;
@@ -53,7 +52,7 @@ int main(int argc, char **argv) {
         }
         count++;
 
-        if (g_stats.count == 0 || count < g_stats.count) // if first pack no sleep
+        if (g_stats.count == 0 || count < g_stats.count) // if packets left to send sleep]
         {
             usleep((unsigned int)(g_stats.interval * 1000000));
         }
