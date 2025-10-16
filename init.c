@@ -1,65 +1,16 @@
 #include "ping.h"
 
 
-int parse_args(int argc, char **argv) {
-    int i = 1;
-    g_stats.ttl = DEFAULT_TTL;
-    g_stats.count = 0;      // 0 == inf
-    g_stats.interval = 1.0; // Default 1 second
-    g_stats.hostname = NULL;
-
-    while (i < argc) {
-        if (strcmp(argv[i], "-ttl") == 0) {
-            if (i + 1 >= argc) {
-                fprintf(stderr, "ft_ping: option requires an argument -- 'ttl'\n");
-                print_usage();
-            }
-            i++;
-            int ttl = atoi(argv[i]);
-            if (ttl < 1 || ttl > 255) {
-                fprintf(stderr, "ft_ping: invalid TTL value: %s\n", argv[i]);
-                exit(1);
-            }
-            g_stats.ttl = ttl;
-        } else if (strcmp(argv[i], "-c") == 0) {
-            if (i + 1 >= argc) {
-                fprintf(stderr, "ft_ping: option requires an argument -- 'c'\n");
-                print_usage();
-            }
-            i++;
-            g_stats.count = atoi(argv[i]);
-            if (g_stats.count < 1) {
-                fprintf(stderr, "ft_ping: invalid count value: %s\n", argv[i]);
-                exit(1);
-            }
-        } else if (strcmp(argv[i], "-i") == 0) {
-            if (i + 1 >= argc) {
-                fprintf(stderr, "ft_ping: option requires an argument -- 'i'\n");
-                print_usage();
-            }
-            i++;
-            g_stats.interval = atof(argv[i]);
-            if (g_stats.interval < 0.0) {
-                fprintf(stderr, "ft_ping: invalid interval value: %s\n", argv[i]);
-                exit(1);
-            }
-        } else if (argv[i][0] == '-') {
-            fprintf(stderr, "ft_ping: invalid option -- '%s'\n", argv[i]);
-            print_usage();
-        } else {
-            if (g_stats.hostname != NULL) {
-                fprintf(stderr, "ft_ping: too many arguments\n");
-                print_usage();
-            }
-            g_stats.hostname = argv[i];
-        }
-        i++;
-    }
-
-    if (g_stats.hostname == NULL) {
-        fprintf(stderr, "ft_ping: missing host operand\n");
-        print_usage();
-    }
-
-    return 0;
+void init_g_stats(int argc, char **argv )
+{
+    memset(&g_stats, 0, sizeof(g_stats));
+    g_stats.hostname = argv[argc - 1];
+    g_stats.min_rtt = 999999.0;
+    g_stats.max_rtt = 0.0;
+    g_stats.sum_rtt = 0.0;
+    g_stats.sum_sq_rtt = 0.0;
+    g_stats.packets_sent = 0;
+    g_stats.packets_received = 0;
 }
+
+

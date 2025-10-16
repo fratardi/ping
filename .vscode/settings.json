@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "ping.h": "c",
+        "time.h": "c"
+    }
+}

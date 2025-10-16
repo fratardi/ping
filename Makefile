@@ -4,7 +4,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g3
 LDFLAGS = -lm
 
-SRCS = ping.c init.c network.c utils.c 
+SRCS = parser.c ping.c init.c network.c utils.c 
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
