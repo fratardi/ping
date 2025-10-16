@@ -1,45 +1,26 @@
-
 NAME = ping
 
-MAIN = ping.c
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -g3
+LDFLAGS = -lm
 
-FLAGS =  -g3  -Wuninitialized -Wall -Wextra -Werror
-
-FLAG__DBG = # -fsanitize=address
-
-SRCDIR = #./src/
-
-COMPILER = gcc
-
-RM = /bin/rm -rf
-
-FUNCTIONS = print1.c pinger.c init_ping.c utils.c network.c
-
-SRCO = $(addprefix $(SRCDIR), $(FUNCTIONS:.c=.o)) \
-		$(MAIN:.c=.o)
-
-HEADERS = ./ping.h
-
-%.o: %.c $(HEADERS)
-	$(COMPILER) $(FLAGS) -o $@ -c $<
+SRCS = ping.c init.c network.c utils.c 
+OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(SRCO)
-#	make -C libft
-	$(COMPILER) $(FLAGS) $(FLAG__DBG) -o $(NAME) $(SRCO)
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LDFLAGS)
 
-
-dbg: $(NAME)
-	$(COMPILER) $(FLAG__DBG) -o $(NAME) $(SRCO)
-
+%.o: %.c ping.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	make 
-	$(RM) $(SRCO)
+	rm -f $(OBJS)
 
 fclean: clean
-	make 
-	$(RM) $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re

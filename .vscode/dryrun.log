@@ -1,5 +1,0 @@
-make --dry-run --keep-going --print-directory
-make: Entering directory '/mnt/nfs/homes/fratardi/ping'
-clang -g3  -Wuninitialized -Wall -Wextra -Werror  -o ping print1.o pinger.o ping.o
-make: Leaving directory '/mnt/nfs/homes/fratardi/ping'
- 
